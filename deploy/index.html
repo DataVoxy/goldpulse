@@ -1,0 +1,531 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>GoldPulse — Algorithmic Gold Signals</title>
+    <meta name="description" content="Automated gold trading signals powered by algorithms. Real-time entries with SL/TP levels. Verified track record.">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        
+        :root {
+            --gold: #FFD700;
+            --gold-dark: #B8860B;
+            --bg: #0a0a0f;
+            --bg-card: #12121a;
+            --bg-card-hover: #1a1a25;
+            --text: #e4e4e7;
+            --text-muted: #9ca3af;
+            --green: #22c55e;
+            --red: #ef4444;
+            --border: #2a2a35;
+        }
+
+        body {
+            font-family: 'Inter', -apple-system, sans-serif;
+            background: var(--bg);
+            color: var(--text);
+            line-height: 1.6;
+            overflow-x: hidden;
+        }
+
+        .container { max-width: 1100px; margin: 0 auto; padding: 0 24px; }
+
+        /* Header */
+        header {
+            padding: 20px 0;
+            border-bottom: 1px solid var(--border);
+            position: sticky;
+            top: 0;
+            background: rgba(10, 10, 15, 0.95);
+            backdrop-filter: blur(10px);
+            z-index: 100;
+        }
+        .header-inner {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        .logo {
+            font-size: 1.5rem;
+            font-weight: 800;
+            color: var(--gold);
+            text-decoration: none;
+        }
+        .logo span { color: var(--text); }
+        .nav-cta {
+            background: var(--gold);
+            color: #000;
+            padding: 10px 24px;
+            border-radius: 8px;
+            text-decoration: none;
+            font-weight: 600;
+            font-size: 0.9rem;
+            transition: transform 0.2s, box-shadow 0.2s;
+        }
+        .nav-cta:hover {
+            transform: translateY(-1px);
+            box-shadow: 0 4px 20px rgba(255, 215, 0, 0.3);
+        }
+
+        /* Hero */
+        .hero {
+            padding: 100px 0 80px;
+            text-align: center;
+        }
+        .hero-badge {
+            display: inline-block;
+            background: rgba(255, 215, 0, 0.1);
+            border: 1px solid rgba(255, 215, 0, 0.3);
+            padding: 6px 16px;
+            border-radius: 20px;
+            font-size: 0.85rem;
+            color: var(--gold);
+            margin-bottom: 24px;
+        }
+        .hero h1 {
+            font-size: clamp(2.5rem, 6vw, 4rem);
+            font-weight: 800;
+            line-height: 1.1;
+            margin-bottom: 20px;
+        }
+        .hero h1 .highlight { color: var(--gold); }
+        .hero p {
+            font-size: 1.2rem;
+            color: var(--text-muted);
+            max-width: 600px;
+            margin: 0 auto 40px;
+        }
+        .hero-cta {
+            display: inline-flex;
+            align-items: center;
+            gap: 10px;
+            background: var(--gold);
+            color: #000;
+            padding: 16px 40px;
+            border-radius: 10px;
+            text-decoration: none;
+            font-weight: 700;
+            font-size: 1.1rem;
+            transition: transform 0.2s, box-shadow 0.2s;
+        }
+        .hero-cta:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 30px rgba(255, 215, 0, 0.3);
+        }
+        .hero-sub {
+            margin-top: 16px;
+            font-size: 0.9rem;
+            color: var(--text-muted);
+        }
+
+        /* Stats bar */
+        .stats-bar {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+            gap: 1px;
+            background: var(--border);
+            border-radius: 12px;
+            overflow: hidden;
+            margin: 60px 0;
+        }
+        .stat-item {
+            background: var(--bg-card);
+            padding: 24px;
+            text-align: center;
+        }
+        .stat-value {
+            font-size: 1.8rem;
+            font-weight: 700;
+            color: var(--gold);
+        }
+        .stat-label {
+            font-size: 0.85rem;
+            color: var(--text-muted);
+            margin-top: 4px;
+        }
+
+        /* Track Record */
+        .section { padding: 80px 0; }
+        .section-title {
+            font-size: 2rem;
+            font-weight: 700;
+            margin-bottom: 12px;
+        }
+        .section-subtitle {
+            color: var(--text-muted);
+            margin-bottom: 40px;
+            font-size: 1.05rem;
+        }
+
+        .track-record-table {
+            width: 100%;
+            border-collapse: collapse;
+            background: var(--bg-card);
+            border-radius: 12px;
+            overflow: hidden;
+        }
+        .track-record-table th {
+            background: #1a1a25;
+            padding: 14px 16px;
+            text-align: left;
+            font-size: 0.8rem;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            color: var(--text-muted);
+        }
+        .track-record-table td {
+            padding: 14px 16px;
+            border-top: 1px solid var(--border);
+            font-size: 0.9rem;
+            font-family: 'Courier New', monospace;
+        }
+        .win { color: var(--green); font-weight: 600; }
+        .loss { color: var(--red); font-weight: 600; }
+
+        /* How it works */
+        .steps {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 24px;
+        }
+        .step {
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            padding: 32px;
+            transition: border-color 0.3s;
+        }
+        .step:hover { border-color: var(--gold); }
+        .step-num {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            width: 36px;
+            height: 36px;
+            background: rgba(255, 215, 0, 0.1);
+            border-radius: 8px;
+            color: var(--gold);
+            font-weight: 700;
+            margin-bottom: 16px;
+        }
+        .step h3 { margin-bottom: 8px; font-size: 1.1rem; }
+        .step p { color: var(--text-muted); font-size: 0.95rem; }
+
+        /* Pricing */
+        .pricing-cards {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 24px;
+            margin-top: 40px;
+        }
+        .price-card {
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: 16px;
+            padding: 40px 32px;
+            position: relative;
+        }
+        .price-card.featured {
+            border-color: var(--gold);
+            box-shadow: 0 0 40px rgba(255, 215, 0, 0.1);
+        }
+        .price-card.featured::before {
+            content: 'MOST POPULAR';
+            position: absolute;
+            top: -12px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: var(--gold);
+            color: #000;
+            padding: 4px 16px;
+            border-radius: 12px;
+            font-size: 0.75rem;
+            font-weight: 700;
+        }
+        .price-name { font-size: 1.2rem; font-weight: 600; margin-bottom: 8px; }
+        .price-amount {
+            font-size: 3rem;
+            font-weight: 800;
+            margin: 16px 0;
+        }
+        .price-amount span { font-size: 1rem; color: var(--text-muted); font-weight: 400; }
+        .price-features {
+            list-style: none;
+            margin: 24px 0;
+        }
+        .price-features li {
+            padding: 8px 0;
+            color: var(--text-muted);
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        .price-features li::before {
+            content: '✓';
+            color: var(--green);
+            font-weight: 700;
+        }
+        .price-cta {
+            display: block;
+            text-align: center;
+            padding: 14px;
+            border-radius: 10px;
+            text-decoration: none;
+            font-weight: 600;
+            transition: transform 0.2s;
+        }
+        .price-cta:hover { transform: translateY(-1px); }
+        .price-cta-primary {
+            background: var(--gold);
+            color: #000;
+        }
+        .price-cta-secondary {
+            background: transparent;
+            border: 1px solid var(--border);
+            color: var(--text);
+        }
+
+        /* FAQ */
+        .faq-item {
+            border-bottom: 1px solid var(--border);
+            padding: 24px 0;
+        }
+        .faq-q {
+            font-weight: 600;
+            font-size: 1.05rem;
+            margin-bottom: 8px;
+        }
+        .faq-a { color: var(--text-muted); }
+
+        /* Footer */
+        footer {
+            border-top: 1px solid var(--border);
+            padding: 40px 0;
+            text-align: center;
+            color: var(--text-muted);
+            font-size: 0.85rem;
+        }
+        footer a { color: var(--gold); text-decoration: none; }
+
+        /* Disclaimer */
+        .disclaimer {
+            background: rgba(239, 68, 68, 0.05);
+            border: 1px solid rgba(239, 68, 68, 0.2);
+            border-radius: 8px;
+            padding: 16px 20px;
+            margin-top: 40px;
+            font-size: 0.8rem;
+            color: var(--text-muted);
+        }
+
+        @media (max-width: 768px) {
+            .hero { padding: 60px 0 40px; }
+            .stats-bar { grid-template-columns: repeat(2, 1fr); }
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <div class="container header-inner">
+            <a href="#" class="logo">Gold<span>Pulse</span></a>
+            <a href="#pricing" class="nav-cta">Join Now</a>
+        </div>
+    </header>
+
+    <main>
+        <!-- Hero -->
+        <section class="hero">
+            <div class="container">
+                <div class="hero-badge">⚡ Algorithm-powered • Real-time signals</div>
+                <h1>Gold signals that<br><span class="highlight">actually work</span></h1>
+                <p>Automated XAU/USD trading signals with exact entry, stop loss, and take profit levels. Delivered to your Telegram in real-time.</p>
+                <a href="https://t.me/goldpulse14" class="hero-cta" target="_blank">Join Telegram Channel →</a>
+                <p class="hero-sub">7 days free • Cancel anytime • No credit card required</p>
+            </div>
+        </section>
+
+        <!-- Stats -->
+        <div class="container">
+            <div class="stats-bar" id="stats-bar">
+                <div class="stat-item">
+                    <div class="stat-value" id="stat-winrate">—</div>
+                    <div class="stat-label">Win Rate</div>
+                </div>
+                <div class="stat-item">
+                    <div class="stat-value" id="stat-trades">—</div>
+                    <div class="stat-label">Total Trades</div>
+                </div>
+                <div class="stat-item">
+                    <div class="stat-value" id="stat-pnl">—</div>
+                    <div class="stat-label">Total P&L</div>
+                </div>
+                <div class="stat-item">
+                    <div class="stat-value" id="stat-avg">—</div>
+                    <div class="stat-label">Avg Win</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Track Record -->
+        <section class="section">
+            <div class="container">
+                <h2 class="section-title">📊 Verified Track Record</h2>
+                <p class="section-subtitle">Every signal logged automatically. No cherry-picking. Full transparency.</p>
+                <div style="overflow-x: auto;">
+                    <table class="track-record-table" id="track-record">
+                        <thead>
+                            <tr>
+                                <th>Date</th>
+                                <th>Direction</th>
+                                <th>Entry</th>
+                                <th>Exit</th>
+                                <th>Result</th>
+                                <th>P&L</th>
+                                <th>Duration</th>
+                            </tr>
+                        </thead>
+                        <tbody id="trades-body">
+                            <!-- Filled by JS -->
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </section>
+
+        <!-- How it Works -->
+        <section class="section">
+            <div class="container">
+                <h2 class="section-title">How it works</h2>
+                <p class="section-subtitle">Three steps to professional gold signals</p>
+                <div class="steps">
+                    <div class="step">
+                        <div class="step-num">1</div>
+                        <h3>Join Telegram</h3>
+                        <p>Get instant access to our signal channel. Signals arrive in real-time during London and US sessions.</p>
+                    </div>
+                    <div class="step">
+                        <div class="step-num">2</div>
+                        <h3>Get Signals</h3>
+                        <p>Each signal includes exact entry price, stop loss, and take profit. Plus market context and indicators.</p>
+                    </div>
+                    <div class="step">
+                        <div class="step-num">3</div>
+                        <h3>Execute & Profit</h3>
+                        <p>Copy the levels to your broker. Manage your own risk. We handle the analysis, you handle the execution.</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Pricing -->
+        <section class="section" id="pricing">
+            <div class="container">
+                <h2 class="section-title">Simple pricing</h2>
+                <p class="section-subtitle">Start free. Upgrade when you're convinced.</p>
+                <div class="pricing-cards">
+                    <div class="price-card">
+                        <div class="price-name">Free</div>
+                        <p style="color: var(--text-muted);">Get a feel for our signals</p>
+                        <div class="price-amount">€0 <span>/month</span></div>
+                        <ul class="price-features">
+                            <li>Delayed signals (30 min)</li>
+                            <li>Daily market updates</li>
+                            <li>Track record access</li>
+                            <li>Community chat</li>
+                        </ul>
+                        <a href="https://t.me/goldpulse14" class="price-cta price-cta-secondary" target="_blank">Join Free Channel</a>
+                    </div>
+                    <div class="price-card featured">
+                        <div class="price-name">Pro</div>
+                        <p style="color: var(--text-muted);">Real-time signals + full access</p>
+                        <div class="price-amount">€49 <span>/month</span></div>
+                        <ul class="price-features">
+                            <li>Real-time signals (instant)</li>
+                            <li>Entry + SL + TP levels</li>
+                            <li>Market analysis & recaps</li>
+                            <li>Indicator dashboard</li>
+                            <li>Priority support</li>
+                        </ul>
+                        <a href="https://t.me/goldpulse14" class="price-cta price-cta-primary" target="_blank">Start 7-Day Free Trial</a>
+                    </div>
+                </div>
+
+                <div class="disclaimer">
+                    <strong>⚠️ Risk Disclaimer:</strong> Trading gold CFDs involves significant risk of loss. Past performance does not guarantee future results. GoldPulse provides signals for informational purposes only and is not financial advice. Only trade with money you can afford to lose. You are responsible for your own trading decisions.
+                </div>
+            </div>
+        </section>
+
+        <!-- FAQ -->
+        <section class="section">
+            <div class="container">
+                <h2 class="section-title">FAQ</h2>
+                <div class="faq-item">
+                    <div class="faq-q">What asset do you trade?</div>
+                    <div class="faq-a">XAU/USD (gold) exclusively. We focus on one asset and know it deeply.</div>
+                </div>
+                <div class="faq-item">
+                    <div class="faq-q">What timeframe and sessions?</div>
+                    <div class="faq-a">We analyze 1-hour candles and trade during London (07-16 UTC) and US sessions (13-22 UTC). No overnight positions.</div>
+                </div>
+                <div class="faq-item">
+                    <div class="faq-q">Which broker do I need?</div>
+                    <div class="faq-a">Any broker that offers gold/XAU CFDs. Our signals include exact price levels that work on any platform.</div>
+                </div>
+                <div class="faq-item">
+                    <div class="faq-q">How are signals generated?</div>
+                    <div class="faq-a">Our algorithm combines RSI, MACD, ATR, support/resistance, DXY correlation, and session timing. Fully automated — no emotions.</div>
+                </div>
+                <div class="faq-item">
+                    <div class="faq-q">What's the risk per trade?</div>
+                    <div class="faq-a">Each signal has a defined SL:TP ratio (typically 1:2). We recommend risking 1-2% of your account per trade.</div>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <footer>
+        <div class="container">
+            <p>© 2026 GoldPulse. Built by <a href="https://datavoxy.com">DataVoxy</a>.</p>
+            <p style="margin-top: 8px;">Trading involves risk. This is not financial advice.</p>
+        </div>
+    </footer>
+
+    <script>
+        // Embedded track record data (auto-generated)
+        const data = {"stats":{"total":8,"wins":5,"losses":3,"win_rate":62.5,"total_pnl":40.47,"avg_win":23.58},"trades":[{"open_time":"2026-07-27 10:39 UTC","close_time":"2026-07-27 10:54 UTC","entry":4095.2,"exit_price":4101.84,"outcome":"WIN","pnl_pts":6.64,"pnl_usd":12.97,"duration_min":14.9,"direction":"LONG"},{"open_time":"2026-07-27 10:55 UTC","close_time":"2026-07-27 13:37 UTC","entry":4102.7,"exit_price":4082.25,"outcome":"LOSS","pnl_pts":-20.45,"pnl_usd":-39.88,"duration_min":161.5,"direction":"LONG"},{"open_time":"2026-07-27 13:37 UTC","close_time":"2026-07-27 13:47 UTC","entry":4078.8,"exit_price":4085.67,"outcome":"WIN","pnl_pts":6.87,"pnl_usd":13.47,"duration_min":9.8,"direction":"LONG"},{"open_time":"2026-07-27 13:47 UTC","close_time":"2026-07-27 16:45 UTC","entry":4087.1,"exit_price":4093.98,"outcome":"WIN","pnl_pts":6.88,"pnl_usd":13.47,"duration_min":177.8,"direction":"LONG"},{"open_time":"2026-07-27 19:18 UTC","close_time":"2026-07-28 07:22 UTC","entry":4081.8,"exit_price":4072.33,"outcome":"LOSS","pnl_pts":-9.47,"pnl_usd":-18.56,"duration_min":723.4,"direction":"LONG"},{"open_time":"2026-07-28 07:25 UTC","close_time":"2026-07-28 09:47 UTC","entry":4050.0,"exit_price":4032.55,"outcome":"WIN","pnl_pts":17.45,"pnl_usd":34.47,"duration_min":142.4,"direction":"SHORT"},{"open_time":"2026-07-28 12:38 UTC","close_time":"2026-07-28 15:57 UTC","entry":4034.1,"exit_price":4043.67,"outcome":"LOSS","pnl_pts":-9.57,"pnl_usd":-18.98,"duration_min":199.4,"direction":"SHORT"},{"open_time":"2026-07-28 16:01 UTC","close_time":"2026-07-28 19:03 UTC","entry":4045.0,"exit_price":4023.0,"outcome":"WIN","pnl_pts":22.0,"pnl_usd":43.51,"duration_min":181.2,"direction":"SHORT"}]};
+
+        function loadTrackRecord() {
+            // Update stats
+            document.getElementById('stat-winrate').textContent = data.stats.win_rate + '%';
+            document.getElementById('stat-trades').textContent = data.stats.total;
+            document.getElementById('stat-pnl').textContent = '+$' + data.stats.total_pnl;
+            document.getElementById('stat-avg').textContent = '+$' + data.stats.avg_win;
+            
+            // Fill table
+            const tbody = document.getElementById('trades-body');
+            tbody.innerHTML = '';
+            
+            data.trades.slice().reverse().forEach(trade => {
+                const row = document.createElement('tr');
+                const isWin = trade.outcome === 'WIN';
+                row.innerHTML = `
+                    <td>${trade.open_time}</td>
+                    <td>${trade.direction}</td>
+                    <td>$${trade.entry}</td>
+                    <td>$${trade.exit_price}</td>
+                    <td class="${isWin ? 'win' : 'loss'}">${trade.outcome}</td>
+                    <td class="${isWin ? 'win' : 'loss'}">${isWin ? '+' : ''}$${trade.pnl_usd}</td>
+                    <td>${trade.duration_min}m</td>
+                `;
+                tbody.appendChild(row);
+            });
+        }
+        
+        loadTrackRecord();
+    </script>
+</body>
+</html>

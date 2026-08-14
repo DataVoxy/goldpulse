@@ -1,0 +1,16 @@
+{
+  "price": 62.1,
+  "change_pct": -0.01,
+  "rsi": 53.5,
+  "atr": 0.482,
+  "macd_hist": -0.1427,
+  "ema50": 61.2,
+  "support": 61.49,
+  "resistance": 63.32,
+  "trend_up": true,
+  "gold_silver_ratio": 69.6,
+  "gold_silver_ratio_avg": 69.0,
+  "session": "London",
+  "dxy": 99.74,
+  "timestamp": "2026-08-06 11:07 UTC"
+}

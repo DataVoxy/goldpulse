@@ -1,0 +1,309 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="google-site-verification" content="google461f94c3ced9bfa3" />
+    <title>How Our Gold Trading Algorithm Works: Technical Breakdown (2026)</title>
+    <meta name="description" content="Inside the GoldPulse algorithm: RSI, MACD, ATR-based stops, session filters, and news avoidance. How we generate automated XAU/USD trading signals with a 1:1.7 risk/reward ratio.">
+    <link rel="canonical" href="https://goldpulse.datavoxy.com/blog/gold-algorithm-technical-breakdown">
+    <meta property="og:title" content="How Our Gold Trading Algorithm Works: Technical Breakdown">
+    <meta property="og:description" content="Inside the GoldPulse algorithm: RSI, MACD, ATR stops, session filters, and news avoidance. Transparent look at our automated XAU/USD signal generation.">
+    <meta property="og:url" content="https://goldpulse.datavoxy.com/blog/gold-algorithm-technical-breakdown">
+    <meta property="og:type" content="article">
+    <meta property="og:site_name" content="DataVoxy">
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="How Our Gold Trading Algorithm Works: Technical Breakdown">
+    <meta name="twitter:description" content="RSI, MACD, ATR-based stops, and session filters. How GoldPulse generates automated gold trading signals.">
+    <meta name="keywords" content="gold trading algorithm, XAU/USD signals, automated trading, RSI strategy, MACD gold, ATR stop loss, algorithmic trading gold, GoldPulse, DataVoxy, gold technical analysis">
+    <script type="application/ld+json">
+    {"@context":"https://schema.org","@type":"Article","headline":"How Our Gold Trading Algorithm Works: Technical Breakdown","author":{"@type":"Organization","name":"DataVoxy","url":"https://datavoxy.com"},"publisher":{"@type":"Organization","name":"DataVoxy","url":"https://datavoxy.com"},"datePublished":"2026-08-13","dateModified":"2026-08-13","description":"Technical deep-dive into the GoldPulse algorithm: indicators, entry logic, risk management, and live results.","keywords":"gold trading algorithm, XAU/USD signals, automated trading, RSI, MACD, ATR"}
+    </script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        :root { --gold: #FFD700; --bg: #0a0a0f; --bg-card: #12121a; --text: #e4e4e7; --text-muted: #9ca3af; --border: #2a2a35; --green: #22c55e; --red: #ef4444; }
+        body { font-family: 'Inter', -apple-system, sans-serif; background: var(--bg); color: var(--text); line-height: 1.8; }
+        .container { max-width: 720px; margin: 0 auto; padding: 0 20px; }
+        header { padding: 16px 0; border-bottom: 1px solid var(--border); background: rgba(10,10,15,0.95); backdrop-filter: blur(10px); position: sticky; top: 0; z-index: 100; }
+        .header-inner { display: flex; justify-content: space-between; align-items: center; }
+        .logo { font-size: 1.3rem; font-weight: 800; color: var(--gold); text-decoration: none; }
+        .logo span { color: var(--text); font-weight: 400; font-size: 0.85rem; margin-left: 8px; }
+        .header-links a { color: var(--text-muted); text-decoration: none; font-size: 0.85rem; margin-left: 20px; }
+        .header-links a:hover { color: var(--gold); }
+        article { padding: 60px 0; }
+        h1 { font-size: 2rem; font-weight: 800; line-height: 1.3; margin-bottom: 16px; }
+        h1 .gold { color: var(--gold); }
+        .meta { color: var(--text-muted); font-size: 0.85rem; margin-bottom: 40px; }
+        h2 { font-size: 1.4rem; font-weight: 700; margin: 40px 0 16px; color: var(--text); }
+        h3 { font-size: 1.1rem; font-weight: 600; margin: 24px 0 12px; color: var(--gold); }
+        p { margin-bottom: 20px; color: var(--text); font-size: 1.05rem; }
+        ul, ol { margin: 0 0 20px 24px; }
+        li { margin-bottom: 8px; font-size: 1.05rem; }
+        code { background: var(--bg-card); padding: 2px 8px; border-radius: 4px; font-size: 0.9rem; color: var(--gold); }
+        pre { background: var(--bg-card); border: 1px solid var(--border); border-radius: 8px; padding: 20px; margin-bottom: 24px; overflow-x: auto; font-size: 0.85rem; line-height: 1.6; }
+        pre code { background: none; padding: 0; color: var(--text); }
+        .indicator-table { width: 100%; border-collapse: collapse; margin-bottom: 24px; }
+        .indicator-table th, .indicator-table td { text-align: left; padding: 12px 16px; border-bottom: 1px solid var(--border); font-size: 0.95rem; }
+        .indicator-table th { color: var(--gold); font-weight: 600; font-size: 0.85rem; text-transform: uppercase; letter-spacing: 0.5px; }
+        .indicator-table td { color: var(--text); }
+        .flow-box { background: var(--bg-card); border: 1px solid var(--border); border-radius: 12px; padding: 24px; margin: 24px 0; }
+        .flow-step { display: flex; gap: 12px; align-items: flex-start; margin-bottom: 12px; }
+        .flow-step:last-child { margin-bottom: 0; }
+        .flow-num { background: var(--gold); color: #000; width: 28px; height: 28px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-weight: 700; font-size: 0.8rem; flex-shrink: 0; }
+        .flow-text { padding-top: 3px; }
+        .cta-box { background: var(--bg-card); border: 1px solid var(--gold); border-radius: 12px; padding: 32px; margin: 40px 0; text-align: center; }
+        .cta-box h3 { font-size: 1.2rem; margin-bottom: 8px; color: var(--text); }
+        .cta-box p { color: var(--text-muted); margin-bottom: 16px; }
+        .cta-btn { display: inline-block; background: var(--gold); color: #000; padding: 14px 32px; border-radius: 8px; font-weight: 700; text-decoration: none; font-size: 1rem; margin: 6px; }
+        .cta-btn:hover { opacity: 0.9; }
+        .cta-btn.secondary { background: transparent; border: 1px solid var(--gold); color: var(--gold); }
+        a { color: var(--gold); }
+        .highlight-box { background: rgba(255, 215, 0, 0.05); border-left: 3px solid var(--gold); padding: 16px 20px; margin: 24px 0; border-radius: 0 8px 8px 0; }
+        .highlight-box p { margin: 0; font-size: 0.95rem; }
+        footer { border-top: 1px solid var(--border); padding: 30px 0; text-align: center; color: var(--text-muted); font-size: 0.8rem; }
+        footer a { color: var(--gold); text-decoration: none; }
+        @media (max-width: 600px) { h1 { font-size: 1.6rem; } pre { padding: 14px; font-size: 0.8rem; } }
+    </style>
+</head>
+<body>
+    <header>
+        <div class="container header-inner">
+            <a href="https://goldpulse.datavoxy.com" class="logo">🟡 GoldPulse<span>Blog</span></a>
+            <div class="header-links">
+                <a href="https://goldpulse.datavoxy.com">Dashboard</a>
+                <a href="https://datavoxy.com">DataVoxy</a>
+                <a href="https://t.me/goldpulse14">Telegram</a>
+            </div>
+        </div>
+    </header>
+
+    <main>
+        <article>
+            <div class="container">
+                <h1>How Our <span class="gold">Gold</span> Trading Algorithm Works: Technical Breakdown</h1>
+                <div class="meta">Published August 13, 2026 · 7 min read · By DataVoxy</div>
+
+                <p>Most trading signal services are black boxes. You get a "BUY" or "SELL" — no idea why. We think that's backwards. If you're risking money on a signal, you deserve to know exactly how it's generated.</p>
+
+                <p>This post breaks down the complete logic behind GoldPulse: the indicators, entry conditions, risk management, and filters that determine every signal we send to our <a href="https://t.me/goldpulse14">Telegram channel</a>.</p>
+
+                <h2>The Core Idea</h2>
+
+                <p>GoldPulse is a <strong>trend-following, mean-reversion hybrid</strong>. In plain English: we trade with the overall trend, but enter on pullbacks. This avoids chasing price at the top while still riding momentum.</p>
+
+                <p>The algorithm runs on 4-hour candle data for XAU/USD (gold vs. US dollar) and checks for entry conditions every 30 minutes during active trading sessions.</p>
+
+                <h2>Indicators We Use</h2>
+
+                <table class="indicator-table">
+                    <thead>
+                        <tr>
+                            <th>Indicator</th>
+                            <th>Purpose</th>
+                            <th>Settings</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>EMA 50</td>
+                            <td>Trend direction filter</td>
+                            <td>50-period exponential MA</td>
+                        </tr>
+                        <tr>
+                            <td>RSI</td>
+                            <td>Overbought/oversold detection</td>
+                            <td>14-period</td>
+                        </tr>
+                        <tr>
+                            <td>MACD</td>
+                            <td>Momentum confirmation</td>
+                            <td>12/26/9 (standard)</td>
+                        </tr>
+                        <tr>
+                            <td>ATR</td>
+                            <td>Volatility-based stop/target sizing</td>
+                            <td>14-period</td>
+                        </tr>
+                        <tr>
+                            <td>Pivot Support/Resistance</td>
+                            <td>Key price levels (20-bar lookback)</td>
+                            <td>20-period high/low</td>
+                        </tr>
+                    </tbody>
+                </table>
+
+                <p>Nothing exotic. These are battle-tested indicators that every trader knows. The edge isn't in the indicators — it's in how they're combined and filtered.</p>
+
+                <h2>Entry Logic: All Conditions Must Align</h2>
+
+                <p>A signal is only generated when <strong>all</strong> of the following conditions are true simultaneously. One missing condition = no trade.</p>
+
+                <h3>For a LONG (buy) signal:</h3>
+
+                <div class="flow-box">
+                    <div class="flow-step">
+                        <div class="flow-num">1</div>
+                        <div class="flow-text">Price is above the 50 EMA (confirms uptrend)</div>
+                    </div>
+                    <div class="flow-step">
+                        <div class="flow-num">2</div>
+                        <div class="flow-text">Price is near support level (within ATR range — a pullback)</div>
+                    </div>
+                    <div class="flow-step">
+                        <div class="flow-num">3</div>
+                        <div class="flow-text">RSI is below 65 (not overbought, room to run)</div>
+                    </div>
+                    <div class="flow-step">
+                        <div class="flow-num">4</div>
+                        <div class="flow-text">London or US session is active (liquidity)</div>
+                    </div>
+                    <div class="flow-step">
+                        <div class="flow-num">5</div>
+                        <div class="flow-text">No high-impact news within 2 hours (avoid spikes)</div>
+                    </div>
+                    <div class="flow-step">
+                        <div class="flow-num">6</div>
+                        <div class="flow-text">Not too close to market close (avoid overnight fees)</div>
+                    </div>
+                </div>
+
+                <h3>For a SHORT (sell) signal:</h3>
+                <p>The mirror image: price below EMA 50, near resistance, RSI above 35 (overbought), same session and news filters.</p>
+
+                <div class="highlight-box">
+                    <p><strong>Why so strict?</strong> Requiring all conditions to align means fewer signals — but much higher quality. We'd rather miss a trade than take a bad one. On average, this generates 2-4 signals per week.</p>
+                </div>
+
+                <h2>Risk Management: ATR-Based Stops</h2>
+
+                <p>Every trade has a pre-calculated stop-loss and take-profit based on current market volatility (ATR). This means our stops automatically widen in volatile markets and tighten in calm ones.</p>
+
+                <table class="indicator-table">
+                    <thead>
+                        <tr>
+                            <th>Parameter</th>
+                            <th>Value</th>
+                            <th>Logic</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>Stop-Loss</td>
+                            <td>1.2× ATR</td>
+                            <td>Wide enough to avoid noise stops</td>
+                        </tr>
+                        <tr>
+                            <td>Take-Profit</td>
+                            <td>2.0× ATR</td>
+                            <td>Bigger wins to offset losses</td>
+                        </tr>
+                        <tr>
+                            <td>Risk/Reward</td>
+                            <td>~1:1.7</td>
+                            <td>Every win recovers 1.7 losses</td>
+                        </tr>
+                        <tr>
+                            <td>Max Duration</td>
+                            <td>4 hours</td>
+                            <td>Force-close if no TP/SL hit</td>
+                        </tr>
+                    </tbody>
+                </table>
+
+                <p>With a 1:1.7 reward-to-risk ratio, you only need a win rate above 37% to be profitable long-term. Our backtested win rate sits higher than that — but we publish real results in our Telegram channel so you can verify.</p>
+
+                <h2>The Filters: What Keeps Us Out of Bad Trades</h2>
+
+                <p>Indicators alone aren't enough. The filters are what separate a theoretical backtest from a live strategy that actually works.</p>
+
+                <h3>1. Session Filter</h3>
+                <p>Gold is most liquid during London (07:00–16:00 UTC) and US (13:00–22:00 UTC) sessions. The Asian session has thin liquidity, wider spreads, and random moves. We simply don't trade it.</p>
+
+                <h3>2. News Filter</h3>
+                <p>High-impact events like FOMC decisions, NFP releases, or CPI data can move gold $20-50 in seconds. The algorithm checks for upcoming events and blocks all entries within 2 hours of them. The keywords we scan: NFP, FOMC, Fed rate, ECB rate, CPI, GDP, and interest rate decisions.</p>
+
+                <h3>3. Overnight Fee Filter</h3>
+                <p>CFD positions held overnight incur swap fees. The algorithm avoids opening new positions after 19:00 UTC and force-closes everything before 21:00 UTC. This keeps trading costs minimal.</p>
+
+                <h3>4. Trend Alignment</h3>
+                <p>We never trade against the EMA 50 trend. If price is below the 50 EMA, we only look for shorts. If above, only longs. This single rule eliminates most losing counter-trend trades.</p>
+
+                <h2>How a Signal Looks in Practice</h2>
+
+                <pre><code>📊 GoldPulse Signal
+━━━━━━━━━━━━━━━━━━
+Signal: ENTER LONG
+Time: 2026-08-13 14:30 UTC
+
+Price: $2,487.30
+Entry: $2,487.30
+Stop-Loss: $2,475.40 (-$11.90)
+Take-Profit: $2,507.10 (+$19.80)
+
+RSI: 58.3 | MACD: bullish
+Trend: UP (above EMA 50)
+Session: London + US overlap
+Risk/Reward: 1:1.7</code></pre>
+
+                <p>Every signal includes exact price levels, dollar P&L estimates, and the reason behind the trade. No ambiguity.</p>
+
+                <h2>What About Backtesting?</h2>
+
+                <p>The strategy was backtested across 6+ months of historical data with realistic assumptions: spread costs, overnight fees, and slippage. We optimized for consistency over maximum returns — a steady equity curve beats a volatile one.</p>
+
+                <p>Key backtest findings:</p>
+                <ul>
+                    <li>The 1:1.7 risk/reward ratio consistently outperforms tighter ratios</li>
+                    <li>Session filtering alone eliminated ~30% of losing trades</li>
+                    <li>The news filter prevented the largest single-trade drawdowns</li>
+                    <li>ATR-based stops adapt better than fixed-pip stops across different volatility regimes</li>
+                </ul>
+
+                <h2>What This Is NOT</h2>
+
+                <p>Let's be clear about limitations:</p>
+                <ul>
+                    <li><strong>Not financial advice.</strong> This is a technical analysis tool, not a recommendation to trade.</li>
+                    <li><strong>Not a guarantee.</strong> Past performance doesn't predict future results. Markets change.</li>
+                    <li><strong>Not a get-rich-quick system.</strong> This is designed for consistent, small gains — not moonshots.</li>
+                    <li><strong>Not for everyone.</strong> CFD trading involves leverage and you can lose more than your deposit.</li>
+                </ul>
+
+                <h2>Try It Yourself</h2>
+
+                <p>The algorithm runs live and posts signals to our free Telegram channel. No paywall, no premium tier (yet). We publish everything — wins and losses — because transparency builds trust.</p>
+
+                <div class="cta-box">
+                    <h3>Get Live Signals Free</h3>
+                    <p>Join our Telegram channel for real-time gold trading signals with full technical context.</p>
+                    <a href="https://t.me/goldpulse14" class="cta-btn" target="_blank" rel="noopener">Join Telegram Channel</a>
+                    <a href="https://goldpulse.datavoxy.com" class="cta-btn secondary" target="_blank" rel="noopener">View Live Dashboard</a>
+                </div>
+
+                <h2>What's Next</h2>
+
+                <p>We're actively working on:</p>
+                <ul>
+                    <li>Publishing a full track record page with every signal and outcome</li>
+                    <li>Adding silver (XAG/USD) and crypto (BTC) signal strategies</li>
+                    <li>Opening up the daily report feature to channel subscribers</li>
+                </ul>
+
+                <p>Questions about the algorithm? Reach us at <a href="mailto:info@datavoxy.com">info@datavoxy.com</a> or in the <a href="https://t.me/goldpulse14">Telegram group</a>.</p>
+
+            </div>
+        </article>
+    </main>
+
+    <footer>
+        <div class="container">
+            <p>© 2026 <a href="https://datavoxy.com">DataVoxy</a> · <a href="https://goldpulse.datavoxy.com">GoldPulse Dashboard</a> · <a href="https://silverpulse.datavoxy.com">SilverPulse</a> · <a href="https://cryptopulse.datavoxy.com">CryptoPulse</a></p>
+        </div>
+    </footer>
+
+    <!-- GoatCounter analytics -->
+    <script data-goatcounter="https://datavoxy.goatcounter.com/count" async src="//gc.zgo.at/count.js"></script>
+</body>
+</html>

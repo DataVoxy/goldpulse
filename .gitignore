@@ -1,0 +1,33 @@
+# Environment & secrets
+.env
+*.env
+
+# Logs & trade data
+logs/
+*.log
+signals.log
+strategy.log
+woning_scraper.log
+
+# Python
+__pycache__/
+*.pyc
+*.pyo
+.venv/
+venv/
+
+# Data files (personal)
+data/
+posts/
+
+# IDE
+.vscode/
+.kiro/
+
+# OS
+Thumbs.db
+.DS_Store
+
+# Trade results (private)
+logs/trade_results.csv
+logs/trades.json

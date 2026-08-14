@@ -1,0 +1,182 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SilverPulse — Live Silver Market Dashboard</title>
+    <meta name="description" content="Free live silver (XAG/USD) market dashboard. Real-time charts, technical analysis, Gold/Silver ratio. No signup required.">
+    <link rel="canonical" href="https://silverpulse.datavoxy.com">
+    <!-- Open Graph -->
+    <meta property="og:title" content="SilverPulse — Live Silver Market Dashboard">
+    <meta property="og:description" content="Free real-time silver charts, Gold/Silver ratio, technical analysis, and economic calendar. No signup needed.">
+    <meta property="og:url" content="https://silverpulse.datavoxy.com">
+    <meta property="og:type" content="website">
+    <meta property="og:site_name" content="DataVoxy">
+    <!-- Twitter Card -->
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="SilverPulse — Free Live Silver Dashboard">
+    <meta name="twitter:description" content="Real-time XAG/USD charts, Gold/Silver ratio, technical analysis. Free, no signup.">
+    <!-- Structured Data -->
+    <script type="application/ld+json">
+    {"@context":"https://schema.org","@type":"WebApplication","name":"SilverPulse","url":"https://silverpulse.datavoxy.com","description":"Free live silver market dashboard with real-time charts and Gold/Silver ratio","applicationCategory":"FinanceApplication","operatingSystem":"Web","offers":{"@type":"Offer","price":"0","priceCurrency":"USD"},"author":{"@type":"Organization","name":"DataVoxy","url":"https://datavoxy.com"}}
+    </script>
+    <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' fill='%2309090b'/%3E%3Ccircle cx='32' cy='32' r='24' fill='%23C0C0C0'/%3E%3Ctext x='32' y='40' text-anchor='middle' font-size='18' font-weight='bold' fill='%2309090b'%3EAg%3C/text%3E%3C/svg%3E">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        :root { --silver: #C0C0C0; --silver-light: #e8e8e8; --bg: #0a0a0f; --bg-card: #12121a; --text: #e4e4e7; --text-muted: #9ca3af; --border: #2a2a35; --gold: #FFD700; }
+        body { font-family: 'Inter', -apple-system, sans-serif; background: var(--bg); color: var(--text); line-height: 1.6; }
+        .container { max-width: 1100px; margin: 0 auto; padding: 0 20px; }
+        header { padding: 16px 0; border-bottom: 1px solid var(--border); background: rgba(10,10,15,0.95); backdrop-filter: blur(10px); position: sticky; top: 0; z-index: 100; }
+        .header-inner { display: flex; justify-content: space-between; align-items: center; }
+        .logo { font-size: 1.3rem; font-weight: 800; color: var(--silver-light); text-decoration: none; }
+        .logo span { color: var(--text); font-weight: 400; font-size: 0.85rem; margin-left: 8px; }
+        .header-links a { color: var(--text-muted); text-decoration: none; font-size: 0.85rem; margin-left: 20px; }
+        .header-links a:hover { color: var(--silver); }
+        .hero { padding: 40px 0 20px; text-align: center; }
+        .hero h1 { font-size: 1.8rem; font-weight: 700; }
+        .hero h1 .silver { color: var(--silver-light); }
+        .hero p { color: var(--text-muted); margin-top: 8px; font-size: 0.95rem; }
+        .widget-section { margin: 24px 0; border-radius: 12px; overflow: hidden; border: 1px solid var(--border); }
+        .widget-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin: 16px 0; }
+        .section-title { font-size: 1.1rem; font-weight: 700; margin: 32px 0 12px; }
+        .newsletter { background: var(--bg-card); border: 1px solid var(--silver); border-radius: 12px; padding: 32px; margin: 40px 0; text-align: center; }
+        .newsletter h2 { font-size: 1.3rem; margin-bottom: 8px; }
+        .newsletter p { color: var(--text-muted); margin-bottom: 20px; font-size: 0.9rem; }
+        .newsletter-form { display: flex; gap: 8px; max-width: 400px; margin: 0 auto; }
+        .newsletter-form input { flex: 1; padding: 12px 16px; border-radius: 8px; border: 1px solid var(--border); background: var(--bg); color: var(--text); font-size: 0.9rem; }
+        .newsletter-form input:focus { outline: none; border-color: var(--silver); }
+        .newsletter-form button { padding: 12px 24px; border-radius: 8px; border: none; background: var(--silver); color: #000; font-weight: 700; font-size: 0.9rem; cursor: pointer; }
+        .newsletter-note { font-size: 0.75rem; color: var(--text-muted); margin-top: 12px; }
+        .disclaimer { background: rgba(192,192,192,0.03); border: 1px solid var(--border); border-radius: 8px; padding: 12px 16px; font-size: 0.75rem; color: var(--text-muted); margin: 20px 0; }
+        footer { border-top: 1px solid var(--border); padding: 30px 0; text-align: center; color: var(--text-muted); font-size: 0.8rem; }
+        footer a { color: var(--silver); text-decoration: none; }
+        @media (max-width: 700px) { .widget-grid { grid-template-columns: 1fr; } .newsletter-form { flex-direction: column; } }
+    </style>
+</head>
+<body>
+    <header>
+        <div class="container header-inner">
+            <a href="https://datavoxy.com" class="logo">⚪ SilverPulse<span>by <strong style="color:var(--silver)">DataVoxy</strong></span></a>
+            <div class="header-links">
+                <a href="https://goldpulse.datavoxy.com">GoldPulse</a>
+                <a href="https://cryptopulse.datavoxy.com">CryptoPulse</a>
+                <a href="https://datavoxy.com">DataVoxy</a>
+            </div>
+        </div>
+    </header>
+
+    <main>
+        <section class="hero">
+            <div class="container">
+                <h1><span class="silver">Silver</span> Market Dashboard</h1>
+                <p>Live technical analysis for XAG/USD + Gold/Silver ratio. Free.</p>
+            </div>
+        </section>
+
+        <div class="container">
+
+            <!-- Ticker -->
+            <div class="widget-section">
+                <div class="tradingview-widget-container">
+                    <div class="tradingview-widget-container__widget"></div>
+                    <script type="text/javascript" src="https://s3.tradingview.com/external-embedding/embed-widget-ticker-tape.js" async>
+                    {"symbols":[{"proName":"OANDA:XAGUSD","title":"Silver"},{"proName":"OANDA:XAUUSD","title":"Gold"},{"proName":"TVC:DXY","title":"DXY"},{"proName":"TVC:SILVER/GOLD","title":"Silver/Gold"}],"showSymbolLogo":true,"colorTheme":"dark","isTransparent":true,"displayMode":"adaptive","locale":"en"}
+                    </script>
+                </div>
+            </div>
+
+            <!-- Silver Chart -->
+            <h2 class="section-title">📈 XAG/USD Live Chart</h2>
+            <div class="widget-section" style="height:500px">
+                <div class="tradingview-widget-container" style="height:100%;width:100%">
+                    <div id="tv_silver" style="height:100%;width:100%"></div>
+                    <script type="text/javascript" src="https://s3.tradingview.com/tv.js"></script>
+                    <script type="text/javascript">
+                    new TradingView.widget({"autosize":true,"symbol":"OANDA:XAGUSD","interval":"60","timezone":"Etc/UTC","theme":"dark","style":"1","locale":"en","enable_publishing":false,"hide_top_toolbar":false,"allow_symbol_change":true,"studies":["RSI@tv-basicstudies","MACD@tv-basicstudies"],"container_id":"tv_silver"});
+                    </script>
+                </div>
+            </div>
+
+            <!-- Technical Analysis -->
+            <h2 class="section-title">📊 Technical Analysis</h2>
+            <div class="widget-grid">
+                <div class="widget-section" style="height:425px">
+                    <div class="tradingview-widget-container">
+                        <div class="tradingview-widget-container__widget"></div>
+                        <script type="text/javascript" src="https://s3.tradingview.com/external-embedding/embed-widget-technical-analysis.js" async>
+                        {"interval":"1h","width":"100%","height":400,"symbol":"CAPITALCOM:SILVER","showIntervalTabs":true,"locale":"en","colorTheme":"dark"}
+                        </script>
+                    </div>
+                </div>
+                <div class="widget-section" style="height:425px">
+                    <div class="tradingview-widget-container">
+                        <div class="tradingview-widget-container__widget"></div>
+                        <script type="text/javascript" src="https://s3.tradingview.com/external-embedding/embed-widget-technical-analysis.js" async>
+                        {"interval":"1D","width":"100%","height":400,"symbol":"CAPITALCOM:SILVER","showIntervalTabs":true,"locale":"en","colorTheme":"dark"}
+                        </script>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Gold/Silver Comparison -->
+            <h2 class="section-title">⚖️ Gold vs Silver</h2>
+            <div class="widget-section" style="height:400px">
+                <div class="tradingview-widget-container">
+                    <div class="tradingview-widget-container__widget"></div>
+                    <script type="text/javascript" src="https://s3.tradingview.com/external-embedding/embed-widget-market-overview.js" async>
+                    {"colorTheme":"dark","dateRange":"1D","showChart":true,"locale":"en","width":"100%","height":400,"isTransparent":true,"showSymbolLogo":true,"tabs":[{"title":"Metals","symbols":[{"s":"OANDA:XAGUSD","d":"Silver"},{"s":"OANDA:XAUUSD","d":"Gold"},{"s":"TVC:PLATINUM","d":"Platinum"}]},{"title":"Macro","symbols":[{"s":"TVC:DXY","d":"US Dollar"},{"s":"TVC:US10Y","d":"US 10Y Yield"}]}]}
+                    </script>
+                </div>
+            </div>
+
+            <!-- Economic Calendar -->
+            <h2 class="section-title">📅 Economic Calendar</h2>
+            <div class="widget-section" style="height:400px">
+                <div class="tradingview-widget-container">
+                    <div class="tradingview-widget-container__widget"></div>
+                    <script type="text/javascript" src="https://s3.tradingview.com/external-embedding/embed-widget-events.js" async>
+                    {"colorTheme":"dark","isTransparent":true,"width":"100%","height":400,"locale":"en","importanceFilter":"-1,0,1","countryFilter":"us,eu,gb"}
+                    </script>
+                </div>
+            </div>
+
+            <!-- News Timeline -->
+            <h2 class="section-title">📰 Market News</h2>
+            <div class="widget-section" style="height:400px">
+                <div class="tradingview-widget-container">
+                    <div class="tradingview-widget-container__widget"></div>
+                    <script type="text/javascript" src="https://s3.tradingview.com/external-embedding/embed-widget-timeline.js" async>
+                    {"feedMode":"symbol","symbol":"OANDA:XAGUSD","colorTheme":"dark","isTransparent":true,"displayMode":"regular","width":"100%","height":400,"locale":"en"}
+                    </script>
+                </div>
+            </div>
+
+            <!-- Newsletter -->
+            <div class="newsletter">
+                <h2>📬 Silver Market Updates</h2>
+                <p>Daily silver analysis + Gold/Silver ratio in your inbox. Free.</p>
+                <form class="newsletter-form" action="https://formsubmit.co/info@datavoxy.com" method="POST">
+                    <input type="hidden" name="_subject" value="New SilverPulse subscriber">
+                    <input type="hidden" name="_next" value="https://silverpulse.datavoxy.com">
+                    <input type="hidden" name="_captcha" value="false">
+                    <input type="email" name="email" placeholder="you@email.com" required>
+                    <button type="submit">Subscribe</button>
+                </form>
+                <p class="newsletter-note">Free · No spam · Unsubscribe anytime</p>
+            </div>
+
+            <div class="disclaimer">
+                <strong>Disclaimer:</strong> This dashboard shows market data and technical indicators for educational purposes only. Not financial advice. Do your own research. SilverPulse is a product of <a href="https://datavoxy.com" style="color:var(--silver)">DataVoxy</a>.
+            </div>
+        </div>
+    </main>
+
+    <footer>
+        <div class="container">
+            <p>© 2026 SilverPulse · <a href="https://datavoxy.com">DataVoxy</a> · <a href="https://goldpulse.datavoxy.com">GoldPulse</a> · <a href="https://cryptopulse.datavoxy.com">CryptoPulse</a></p>
+        </div>
+    </footer>
+</body>
+</html>

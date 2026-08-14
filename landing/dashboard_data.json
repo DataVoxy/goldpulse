@@ -1,0 +1,19 @@
+{
+  "price": 4431.9,
+  "change_pct": -1.1,
+  "rsi": 43.0,
+  "atr": 19.48,
+  "macd_hist": -1.9181,
+  "ema50": 4447.67,
+  "support": 4408.8,
+  "resistance": 4509.1,
+  "range": 100.3,
+  "trend": "Slightly Bearish",
+  "trend_strength": 3,
+  "session": "London + US",
+  "dxy": 99.82,
+  "dxy_weak": true,
+  "us10y": 4.63,
+  "yields_falling": true,
+  "timestamp": "2026-08-13 15:15 UTC"
+}
