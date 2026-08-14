@@ -18,7 +18,6 @@ venv/
 
 # Data files (personal)
 data/
-posts/
 
 # IDE
 .vscode/
@@ -28,6 +27,35 @@ posts/
 Thumbs.db
 .DS_Store
 
-# Trade results (private)
-logs/trade_results.csv
-logs/trades.json
+# === PRIVATE — do not push ===
+
+# Trading strategy (IP)
+core/strategy.py
+core/strategy2_snapback.py
+core/strategy_crypto.py
+core/strategy_silver.py
+core/signals.py
+
+# Backtest scripts (contain strategy logic)
+backtest*.py
+
+# Personal scripts
+woning_scraper.py
+run_woning_scraper.bat
+setup_woning_task.ps1
+data/
+
+# Test files with credentials
+test_telegram.py
+test_run.py
+test_mp.py
+
+# Posts / content drafts
+posts/
+
+# Trade logs
+tradelog.py
+recalc_trades.py
+
+# Auto post (contains Telegram logic)
+auto_post.py
