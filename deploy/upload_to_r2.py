@@ -78,6 +78,13 @@ CRYPTO_FILES = {
     "crypto/robots.txt": ("robots.txt", "text/plain; charset=utf-8"),
 }
 
+# TonePulse files (uploaded with tonepulse/ prefix)
+TONEPULSE_FILES = {
+    "tonepulse/index.html": ("tonepulse_dashboard.html", "text/html; charset=utf-8"),
+    "tonepulse/sitemap.xml": ("sitemap_tonepulse.xml", "application/xml; charset=utf-8"),
+    "tonepulse/robots.txt": ("robots_tonepulse.txt", "text/plain; charset=utf-8"),
+}
+
 
 def upload_file(local_name, r2_key, content_type):
     """Upload a single file to R2."""
@@ -99,26 +106,33 @@ def upload_file(local_name, r2_key, content_type):
 def main():
     print(f"Uploading to R2 bucket: {BUCKET}")
 
-    # Check if --silver flag is passed
+    # Check flags
     silver_only = "--silver" in sys.argv
     crypto_only = "--crypto" in sys.argv
+    tonepulse_only = "--tonepulse" in sys.argv
 
-    if not silver_only and not crypto_only:
+    if not silver_only and not crypto_only and not tonepulse_only:
         # Upload GoldPulse files
         print("  [GoldPulse]")
         for r2_key, (local_name, content_type) in FILES.items():
             upload_file(local_name, r2_key, content_type)
 
-    if not crypto_only:
+    if not crypto_only and not tonepulse_only:
         # Upload SilverPulse files
         print("  [SilverPulse]")
         for r2_key, (local_name, content_type) in SILVER_FILES.items():
             upload_file(local_name, r2_key, content_type)
 
-    if not silver_only:
+    if not silver_only and not tonepulse_only:
         # Upload CryptoPulse files
         print("  [CryptoPulse]")
         for r2_key, (local_name, content_type) in CRYPTO_FILES.items():
+            upload_file(local_name, r2_key, content_type)
+
+    if tonepulse_only or (not silver_only and not crypto_only):
+        # Upload TonePulse files
+        print("  [TonePulse]")
+        for r2_key, (local_name, content_type) in TONEPULSE_FILES.items():
             upload_file(local_name, r2_key, content_type)
 
     print("Done.")
