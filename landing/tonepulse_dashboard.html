@@ -113,6 +113,43 @@
         /* App Section */
         .app-section { padding: 40px 0 60px; }
 
+        /* Hero Section */
+        .hero-section {
+            padding: 48px 0 32px;
+            text-align: center;
+        }
+        .hero-title {
+            font-size: clamp(1.6rem, 5vw, 2.2rem);
+            font-weight: 900;
+            margin-bottom: 12px;
+            letter-spacing: -0.5px;
+        }
+        .hero-highlight {
+            background: linear-gradient(135deg, var(--accent), var(--accent-light));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+        .hero-sub {
+            color: var(--text-muted);
+            font-size: 0.95rem;
+            max-width: 520px;
+            margin: 0 auto 20px;
+        }
+        .hero-features {
+            display: flex;
+            gap: 12px;
+            justify-content: center;
+            flex-wrap: wrap;
+        }
+        .hero-feat {
+            font-size: 0.78rem;
+            color: var(--text-muted);
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            padding: 5px 12px;
+            border-radius: 20px;
+        }
+
         /* Mode Tabs */
         .mode-tabs { display: flex; gap: 8px; margin-bottom: 20px; justify-content: center; }
         .mode-tab {
@@ -156,6 +193,7 @@
 
         /* Answer Buttons */
         .answers-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; margin-bottom: 24px; }
+        .answers-grid.rhythm-grid { grid-template-columns: repeat(2, 1fr); }
         .answer-btn {
             padding: 14px 8px; border-radius: 10px; border: 1px solid var(--border);
             background: var(--bg); color: var(--text); font-size: 0.85rem; font-weight: 600;
@@ -367,6 +405,7 @@
                 <a href="#train" data-view="train">Train</a>
                 <a href="#progress" data-view="progress">Progress</a>
                 <a href="#references">References</a>
+                <a href="/blog/song-references-for-intervals">Blog</a>
                 <a href="https://datavoxy.com" target="_blank" rel="noopener">DataVoxy</a>
             </nav>
         </div>
@@ -447,12 +486,30 @@
 
         <!-- Training View -->
         <div id="trainView">
+            <!-- Hero -->
+            <section class="hero-section">
+                <div class="container">
+                    <div class="hero-content">
+                        <h1 class="hero-title">Train your ear in <span class="hero-highlight">5 minutes a day</span></h1>
+                        <p class="hero-sub">Recognize intervals, chords, and scales using song references you already know. Built by a conservatory graduate with a neuroscience background.</p>
+                        <div class="hero-features">
+                            <span class="hero-feat">🎵 Song mnemonics</span>
+                            <span class="hero-feat">🧠 Spaced repetition</span>
+                            <span class="hero-feat">🔥 Daily challenges</span>
+                            <span class="hero-feat">📊 Progress tracking</span>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
             <section class="app-section" id="train">
                 <div class="container">
                     <!-- Mode Tabs -->
                     <div class="mode-tabs">
                         <button class="mode-tab active" data-mode="intervals">Intervals</button>
                         <button class="mode-tab" data-mode="chords">Chords</button>
+                        <button class="mode-tab" data-mode="scales">Scales</button>
+                        <button class="mode-tab" data-mode="rhythm">Rhythm</button>
                     </div>
 
                     <!-- Settings -->
@@ -505,6 +562,30 @@
                             <button class="answer-btn" data-chord="minor7">Min7</button>
                             <button class="answer-btn" data-chord="dominant7">Dom7</button>
                             <button class="answer-btn" data-chord="diminished7">Dim7</button>
+                        </div>
+
+                        <!-- Scale Answers -->
+                        <div class="answers-grid" id="scaleAnswers" style="display: none;">
+                            <button class="answer-btn" data-scale="major">Major</button>
+                            <button class="answer-btn" data-scale="natural_minor">Natural Minor</button>
+                            <button class="answer-btn" data-scale="harmonic_minor">Harmonic Minor</button>
+                            <button class="answer-btn" data-scale="melodic_minor">Melodic Minor</button>
+                            <button class="answer-btn" data-scale="dorian">Dorian</button>
+                            <button class="answer-btn" data-scale="mixolydian">Mixolydian</button>
+                            <button class="answer-btn" data-scale="pentatonic_major">Pent. Major</button>
+                            <button class="answer-btn" data-scale="pentatonic_minor">Pent. Minor</button>
+                        </div>
+
+                        <!-- Rhythm Answers -->
+                        <div class="answers-grid rhythm-grid" id="rhythmAnswers" style="display: none;">
+                            <button class="answer-btn" data-rhythm="quarter">Quarter notes</button>
+                            <button class="answer-btn" data-rhythm="eighth">Eighth notes</button>
+                            <button class="answer-btn" data-rhythm="dotted">Dotted quarter</button>
+                            <button class="answer-btn" data-rhythm="syncopated">Syncopated</button>
+                            <button class="answer-btn" data-rhythm="triplet">Triplets</button>
+                            <button class="answer-btn" data-rhythm="sixteenth">Sixteenth notes</button>
+                            <button class="answer-btn" data-rhythm="halves">Half notes</button>
+                            <button class="answer-btn" data-rhythm="mixed">Quarter + eighths</button>
                         </div>
 
                         <!-- Feedback -->
@@ -692,6 +773,31 @@
         diminished7: { name: 'Dim7', intervals: [0, 3, 6, 9] },
     };
 
+    // Scale data (intervals from root)
+    const SCALES = {
+        major: { name: 'Major', intervals: [0, 2, 4, 5, 7, 9, 11, 12] },
+        natural_minor: { name: 'Natural Minor', intervals: [0, 2, 3, 5, 7, 8, 10, 12] },
+        harmonic_minor: { name: 'Harmonic Minor', intervals: [0, 2, 3, 5, 7, 8, 11, 12] },
+        melodic_minor: { name: 'Melodic Minor', intervals: [0, 2, 3, 5, 7, 9, 11, 12] },
+        dorian: { name: 'Dorian', intervals: [0, 2, 3, 5, 7, 9, 10, 12] },
+        mixolydian: { name: 'Mixolydian', intervals: [0, 2, 4, 5, 7, 9, 10, 12] },
+        pentatonic_major: { name: 'Pent. Major', intervals: [0, 2, 4, 7, 9, 12] },
+        pentatonic_minor: { name: 'Pent. Minor', intervals: [0, 3, 5, 7, 10, 12] },
+    };
+
+    // Rhythm patterns (time values in beats at 90bpm, 4 beats total)
+    // Each pattern has a VERY different number of hits to make them distinguishable
+    const RHYTHMS = {
+        quarter: { name: 'Quarter notes', beats: [0, 1, 2, 3], hits: 4 },
+        eighth: { name: 'Eighth notes', beats: [0, 0.5, 1, 1.5, 2, 2.5, 3, 3.5], hits: 8 },
+        dotted: { name: 'Dotted quarter', beats: [0, 1.5, 3], hits: 3 },
+        syncopated: { name: 'Syncopated', beats: [0.5, 1.5, 2.5, 3.5], hits: 4 },
+        triplet: { name: 'Triplets', beats: [0, 0.33, 0.67, 1, 1.33, 1.67, 2, 2.33, 2.67, 3, 3.33, 3.67], hits: 12 },
+        sixteenth: { name: 'Sixteenth notes', beats: [0, 0.25, 0.5, 0.75, 1, 1.25, 1.5, 1.75, 2, 2.25, 2.5, 2.75, 3, 3.25, 3.5, 3.75], hits: 16 },
+        halves: { name: 'Half notes', beats: [0, 2], hits: 2 },
+        mixed: { name: 'Quarter + eighths', beats: [0, 1, 1.5, 2, 3, 3.5], hits: 6 },
+    };
+
     // Difficulty presets (which intervals are active)
     const DIFFICULTY = {
         easy: [2, 4, 5, 7, 12],           // M2, M3, P4, P5, Octave
@@ -753,6 +859,8 @@
     let currentDifficulty = 'medium';
     let currentInterval = null;
     let currentChord = null;
+    let currentScale = null;
+    let currentRhythm = null;
     let sessionStats = { correct: 0, total: 0, streak: 0 };
     let answered = false;
 
@@ -998,6 +1106,66 @@
         });
     }
 
+    function playScale() {
+        const ctx = getAudioCtx();
+        const now = ctx.currentTime;
+        const root = 48 + Math.floor(Math.random() * 12);
+        const intervals = SCALES[currentScale].intervals;
+        intervals.forEach((interval, i) => {
+            playTone(noteFreq(root + interval), now + i * 0.25, 0.3);
+        });
+    }
+
+    function playRhythm() {
+        const ctx = getAudioCtx();
+        const now = ctx.currentTime;
+        const bpm = 90;
+        const beatDuration = 60 / bpm;
+        const beats = RHYTHMS[currentRhythm].beats;
+
+        beats.forEach((beat, i) => {
+            const time = now + beat * beatDuration;
+            // Hi-hat like sound (filtered noise burst)
+            const bufferSize = ctx.sampleRate * 0.04;
+            const buffer = ctx.createBuffer(1, bufferSize, ctx.sampleRate);
+            const data = buffer.getChannelData(0);
+            for (let j = 0; j < bufferSize; j++) {
+                data[j] = (Math.random() * 2 - 1) * (1 - j / bufferSize);
+            }
+            const source = ctx.createBufferSource();
+            source.buffer = buffer;
+
+            const filter = ctx.createBiquadFilter();
+            filter.type = 'highpass';
+            filter.frequency.value = 7000;
+
+            const gain = ctx.createGain();
+            gain.gain.setValueAtTime(0.6, time);
+            gain.gain.exponentialRampToValueAtTime(0.001, time + 0.05);
+
+            source.connect(filter);
+            filter.connect(gain);
+            gain.connect(ctx.destination);
+            source.start(time);
+            source.stop(time + 0.05);
+
+            // Add a kick on beat 0 and 2 for reference
+            if (beat === 0 || beat === 2) {
+                const kick = ctx.createOscillator();
+                const kickGain = ctx.createGain();
+                kick.type = 'sine';
+                kick.frequency.setValueAtTime(150, time);
+                kick.frequency.exponentialRampToValueAtTime(40, time + 0.08);
+                kickGain.gain.setValueAtTime(0.4, time);
+                kickGain.gain.exponentialRampToValueAtTime(0.001, time + 0.1);
+                kick.connect(kickGain);
+                kickGain.connect(ctx.destination);
+                kick.start(time);
+                kick.stop(time + 0.1);
+            }
+        });
+    }
+
     // ============================================
     // GAME LOGIC
     // ============================================
@@ -1012,9 +1180,21 @@
         if (currentMode === 'intervals') {
             currentInterval = getWeightedInterval();
             document.getElementById('exerciseTitle').textContent = 'Listen and identify the interval';
-        } else {
+        } else if (currentMode === 'chords') {
             currentChord = getWeightedChord();
             document.getElementById('exerciseTitle').textContent = 'Listen and identify the chord';
+        } else if (currentMode === 'scales') {
+            const scaleKeys = Object.keys(SCALES);
+            currentScale = scaleKeys[Math.floor(Math.random() * scaleKeys.length)];
+            document.getElementById('exerciseTitle').textContent = 'Listen and identify the scale';
+        } else if (currentMode === 'rhythm') {
+            const rhythmKeys = Object.keys(RHYTHMS);
+            let newRhythm = currentRhythm;
+            while (newRhythm === currentRhythm && rhythmKeys.length > 1) {
+                newRhythm = rhythmKeys[Math.floor(Math.random() * rhythmKeys.length)];
+            }
+            currentRhythm = newRhythm;
+            document.getElementById('exerciseTitle').textContent = 'Listen and identify the rhythm pattern';
         }
 
         updateVisibleAnswers();
@@ -1037,9 +1217,16 @@
         if (currentMode === 'intervals') {
             if (!currentInterval) newQuestion();
             playInterval();
-        } else {
+        } else if (currentMode === 'chords') {
             if (!currentChord) newQuestion();
             playChord();
+        } else if (currentMode === 'scales') {
+            if (!currentScale) newQuestion();
+            playScale();
+        } else if (currentMode === 'rhythm') {
+            if (!currentRhythm) newQuestion();
+            playRhythm();
+            console.log('Playing rhythm:', currentRhythm, RHYTHMS[currentRhythm].beats);
         }
     }
 
@@ -1061,10 +1248,24 @@
             if (!progress.intervals[itemKey]) progress.intervals[itemKey] = { correct: 0, total: 0 };
             progress.intervals[itemKey].total++;
             if (isCorrect) progress.intervals[itemKey].correct++;
-        } else {
+        } else if (currentMode === 'chords') {
             isCorrect = selectedValue === currentChord;
             correctValue = currentChord;
             itemKey = correctValue;
+            if (!progress.chords[itemKey]) progress.chords[itemKey] = { correct: 0, total: 0 };
+            progress.chords[itemKey].total++;
+            if (isCorrect) progress.chords[itemKey].correct++;
+        } else if (currentMode === 'scales') {
+            isCorrect = selectedValue === currentScale;
+            correctValue = currentScale;
+            itemKey = 'scale_' + correctValue;
+            if (!progress.chords[itemKey]) progress.chords[itemKey] = { correct: 0, total: 0 };
+            progress.chords[itemKey].total++;
+            if (isCorrect) progress.chords[itemKey].correct++;
+        } else if (currentMode === 'rhythm') {
+            isCorrect = selectedValue === currentRhythm;
+            correctValue = currentRhythm;
+            itemKey = 'rhythm_' + correctValue;
             if (!progress.chords[itemKey]) progress.chords[itemKey] = { correct: 0, total: 0 };
             progress.chords[itemKey].total++;
             if (isCorrect) progress.chords[itemKey].correct++;
@@ -1091,18 +1292,22 @@
         if (isCorrect) {
             const hint = currentMode === 'intervals'
                 ? `${currentInterval.name} — "${currentInterval.song}"`
-                : CHORDS[currentChord].name;
+                : currentMode === 'chords' ? CHORDS[currentChord].name
+                : currentMode === 'scales' ? SCALES[currentScale].name
+                : RHYTHMS[currentRhythm].name;
             feedbackEl.innerHTML = `<div class="feedback-text correct">✓ Correct! +${xpGained} XP</div><div class="feedback-hint">${hint}</div>`;
         } else {
             const correctName = currentMode === 'intervals'
                 ? `${currentInterval.name} — "${currentInterval.song}"`
-                : CHORDS[currentChord].name;
+                : currentMode === 'chords' ? CHORDS[currentChord].name
+                : currentMode === 'scales' ? SCALES[currentScale].name
+                : RHYTHMS[currentRhythm].name;
             feedbackEl.innerHTML = `<div class="feedback-text wrong">✗ Wrong</div><div class="feedback-hint">It was: ${correctName}</div>`;
         }
 
         // Highlight buttons
-        const container = currentMode === 'intervals' ? 'intervalAnswers' : 'chordAnswers';
-        const attr = currentMode === 'intervals' ? 'semitones' : 'chord';
+        const container = currentMode === 'intervals' ? 'intervalAnswers' : currentMode === 'chords' ? 'chordAnswers' : currentMode === 'scales' ? 'scaleAnswers' : 'rhythmAnswers';
+        const attr = currentMode === 'intervals' ? 'semitones' : currentMode === 'chords' ? 'chord' : currentMode === 'scales' ? 'scale' : 'rhythm';
         document.querySelectorAll(`#${container} .answer-btn`).forEach(btn => {
             btn.disabled = true;
             const val = btn.dataset[attr];
@@ -1249,6 +1454,12 @@
     document.querySelectorAll('#chordAnswers .answer-btn').forEach(btn => {
         btn.addEventListener('click', () => checkAnswer(btn.dataset.chord));
     });
+    document.querySelectorAll('#scaleAnswers .answer-btn').forEach(btn => {
+        btn.addEventListener('click', () => checkAnswer(btn.dataset.scale));
+    });
+    document.querySelectorAll('#rhythmAnswers .answer-btn').forEach(btn => {
+        btn.addEventListener('click', () => checkAnswer(btn.dataset.rhythm));
+    });
 
     // Mode tabs
     document.querySelectorAll('.mode-tab').forEach(tab => {
@@ -1258,6 +1469,8 @@
             currentMode = tab.dataset.mode;
             document.getElementById('intervalAnswers').style.display = currentMode === 'intervals' ? 'grid' : 'none';
             document.getElementById('chordAnswers').style.display = currentMode === 'chords' ? 'grid' : 'none';
+            document.getElementById('scaleAnswers').style.display = currentMode === 'scales' ? 'grid' : 'none';
+            document.getElementById('rhythmAnswers').style.display = currentMode === 'rhythm' ? 'grid' : 'none';
             sessionStats = { correct: 0, total: 0, streak: 0 };
             updateSessionStats();
             newQuestion();

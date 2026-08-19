@@ -60,6 +60,7 @@ FILES = {
     "robots.txt": ("robots.txt", "text/plain; charset=utf-8"),
     "blog/free-gold-dashboard": ("blog_gold_dashboard.html", "text/html; charset=utf-8"),
     "blog/gold-algorithm-technical-breakdown": ("blog_gold_algorithm.html", "text/html; charset=utf-8"),
+    "blog/gold-key-levels-2026": ("blog_gold_key_levels.html", "text/html; charset=utf-8"),
 }
 
 # SilverPulse files (uploaded to same bucket with silver/ prefix)
@@ -83,6 +84,15 @@ TONEPULSE_FILES = {
     "tonepulse/index.html": ("tonepulse_dashboard.html", "text/html; charset=utf-8"),
     "tonepulse/sitemap.xml": ("sitemap_tonepulse.xml", "application/xml; charset=utf-8"),
     "tonepulse/robots.txt": ("robots_tonepulse.txt", "text/plain; charset=utf-8"),
+    "tonepulse/blog/song-references-for-intervals": ("blog_tonepulse_song_references.html", "text/html; charset=utf-8"),
+}
+
+# DeHet files (uploaded with dehet/ prefix)
+DEHET_FILES = {
+    "dehet/index.html": ("dehet_app.html", "text/html; charset=utf-8"),
+    "dehet/sitemap.xml": ("sitemap_dehet.xml", "application/xml; charset=utf-8"),
+    "dehet/robots.txt": ("robots_dehet.txt", "text/plain; charset=utf-8"),
+    "dehet/blog/50-most-confusing-words": ("blog_dehet_moeilijkste_woorden.html", "text/html; charset=utf-8"),
 }
 
 
@@ -110,29 +120,36 @@ def main():
     silver_only = "--silver" in sys.argv
     crypto_only = "--crypto" in sys.argv
     tonepulse_only = "--tonepulse" in sys.argv
+    dehet_only = "--dehet" in sys.argv
 
-    if not silver_only and not crypto_only and not tonepulse_only:
+    if not silver_only and not crypto_only and not tonepulse_only and not dehet_only:
         # Upload GoldPulse files
         print("  [GoldPulse]")
         for r2_key, (local_name, content_type) in FILES.items():
             upload_file(local_name, r2_key, content_type)
 
-    if not crypto_only and not tonepulse_only:
+    if not crypto_only and not tonepulse_only and not dehet_only:
         # Upload SilverPulse files
         print("  [SilverPulse]")
         for r2_key, (local_name, content_type) in SILVER_FILES.items():
             upload_file(local_name, r2_key, content_type)
 
-    if not silver_only and not tonepulse_only:
+    if not silver_only and not tonepulse_only and not dehet_only:
         # Upload CryptoPulse files
         print("  [CryptoPulse]")
         for r2_key, (local_name, content_type) in CRYPTO_FILES.items():
             upload_file(local_name, r2_key, content_type)
 
-    if tonepulse_only or (not silver_only and not crypto_only):
+    if tonepulse_only or (not silver_only and not crypto_only and not dehet_only):
         # Upload TonePulse files
         print("  [TonePulse]")
         for r2_key, (local_name, content_type) in TONEPULSE_FILES.items():
+            upload_file(local_name, r2_key, content_type)
+
+    if dehet_only or (not silver_only and not crypto_only and not tonepulse_only):
+        # Upload DeHet files
+        print("  [DeHet]")
+        for r2_key, (local_name, content_type) in DEHET_FILES.items():
             upload_file(local_name, r2_key, content_type)
 
     print("Done.")

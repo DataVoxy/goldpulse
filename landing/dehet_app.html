@@ -1,0 +1,596 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>De of Het? — Free Dutch Article Trainer with Spaced Repetition</title>
+    <meta name="description" content="Learn when to use 'de' or 'het' in Dutch. Free trainer with spaced repetition that focuses on words you get wrong. Built by a Dutch teacher.">
+    <meta name="keywords" content="de of het, Dutch articles, learn Dutch, Dutch grammar, de het trainer, Nederlandse grammatica, lidwoorden">
+    <meta property="og:title" content="De of Het? — Free Dutch Article Trainer">
+    <meta property="og:description" content="Train yourself to use the correct Dutch article. Spaced repetition focuses on your mistakes. Free, no signup.">
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="https://dehet.datavoxy.com">
+    <meta property="og:site_name" content="DataVoxy">
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="De of Het? — Dutch Article Trainer">
+    <meta name="twitter:description" content="Free tool to learn de/het in Dutch. Spaced repetition, progress tracking. Built by a Dutch teacher.">
+    <meta name="google-site-verification" content="google461f94c3ced9bfa3">
+    <link rel="canonical" href="https://dehet.datavoxy.com">
+    <script type="application/ld+json">
+    {"@context":"https://schema.org","@type":"WebApplication","name":"De of Het?","url":"https://dehet.datavoxy.com","description":"Free Dutch article trainer with spaced repetition. Learn when to use de or het.","applicationCategory":"EducationalApplication","operatingSystem":"Web","offers":{"@type":"Offer","price":"0","priceCurrency":"USD"},"author":{"@type":"Organization","name":"DataVoxy","url":"https://datavoxy.com"},"inLanguage":"nl"}
+    </script>
+    <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='12' fill='%2309090b'/%3E%3Ctext x='8' y='44' font-family='Arial' font-size='28' font-weight='bold' fill='%236366f1'%3Ede%3C/text%3E%3Ctext x='36' y='44' font-family='Arial' font-size='18' fill='%23a1a1aa'%3Ehet%3C/text%3E%3C/svg%3E">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        :root {
+            --accent: #6366f1;
+            --accent-light: #818cf8;
+            --accent-glow: rgba(99, 102, 241, 0.3);
+            --bg: #09090b;
+            --bg-card: #111113;
+            --text: #fafafa;
+            --text-muted: #a1a1aa;
+            --border: #27272a;
+            --green: #22c55e;
+            --red: #ef4444;
+            --gold: #fbbf24;
+            --orange: #f97316;
+            --de-color: #3b82f6;
+            --het-color: #f59e0b;
+        }
+        body {
+            font-family: 'Inter', -apple-system, sans-serif;
+            background: var(--bg);
+            color: var(--text);
+            line-height: 1.6;
+            min-height: 100vh;
+        }
+        .container { max-width: 700px; margin: 0 auto; padding: 0 24px; }
+
+        header {
+            padding: 20px 0;
+            border-bottom: 1px solid var(--border);
+            position: sticky; top: 0;
+            background: rgba(9, 9, 11, 0.95);
+            backdrop-filter: blur(12px); z-index: 100;
+        }
+        .header-inner {
+            display: flex; justify-content: space-between; align-items: center;
+            max-width: 700px; margin: 0 auto; padding: 0 24px;
+        }
+        .logo { font-size: 1.4rem; font-weight: 800; color: var(--text); text-decoration: none; }
+        .logo .de { color: var(--de-color); }
+        .logo .het { color: var(--het-color); }
+        .nav-links { display: flex; gap: 20px; }
+        .nav-links a { color: var(--text-muted); text-decoration: none; font-size: 0.85rem; font-weight: 500; cursor: pointer; }
+        .nav-links a:hover { color: var(--text); }
+
+        /* Daily Bar */
+        .daily-bar { background: var(--bg-card); border-bottom: 1px solid var(--border); padding: 12px 0; }
+        .daily-inner { display: flex; align-items: center; gap: 20px; justify-content: center; flex-wrap: wrap; }
+        .streak-icon { font-size: 1.1rem; }
+        .streak-count { font-size: 1.2rem; font-weight: 800; color: var(--orange); }
+        .streak-label { font-size: 0.7rem; color: var(--text-muted); }
+        .xp-value { font-size: 1rem; font-weight: 700; color: var(--accent); }
+        .xp-label { font-size: 0.7rem; color: var(--text-muted); }
+        .level-badge { padding: 3px 10px; border-radius: 10px; font-size: 0.7rem; font-weight: 700; background: var(--accent); color: #fff; }
+        .goal-bar { width: 70px; height: 5px; background: var(--border); border-radius: 3px; overflow: hidden; }
+        .goal-fill { height: 100%; background: var(--green); border-radius: 3px; transition: width 0.3s; }
+        .goal-text { font-size: 0.7rem; color: var(--text-muted); }
+
+        /* Hero */
+        .hero { padding: 48px 0 24px; text-align: center; }
+        .hero h1 { font-size: clamp(1.8rem, 5vw, 2.4rem); font-weight: 900; margin-bottom: 10px; }
+        .hero h1 .de { color: var(--de-color); }
+        .hero h1 .het { color: var(--het-color); }
+        .hero p { color: var(--text-muted); font-size: 0.95rem; max-width: 460px; margin: 0 auto 16px; }
+        .hero-features { display: flex; gap: 10px; justify-content: center; flex-wrap: wrap; }
+        .hero-feat { font-size: 0.75rem; color: var(--text-muted); background: var(--bg-card); border: 1px solid var(--border); padding: 4px 10px; border-radius: 16px; }
+
+        /* Exercise */
+        .exercise { padding: 32px 0; }
+        .exercise-card {
+            background: var(--bg-card); border: 1px solid var(--border);
+            border-radius: 16px; padding: 48px 32px; text-align: center;
+        }
+        .word-display {
+            font-size: clamp(2.2rem, 8vw, 3.5rem); font-weight: 900;
+            margin-bottom: 8px; letter-spacing: -1px;
+        }
+        .word-translation { font-size: 1rem; color: var(--text-muted); margin-bottom: 32px; }
+        .choice-buttons { display: flex; gap: 16px; justify-content: center; margin-bottom: 24px; }
+        .choice-btn {
+            padding: 18px 48px; border-radius: 12px; border: 2px solid var(--border);
+            background: var(--bg); color: var(--text); font-size: 1.4rem; font-weight: 800;
+            cursor: pointer; transition: all 0.2s; font-family: inherit;
+            min-width: 120px;
+        }
+        .choice-btn:hover { transform: translateY(-2px); }
+        .choice-btn.de:hover, .choice-btn.de.correct { border-color: var(--de-color); background: rgba(59, 130, 246, 0.1); color: var(--de-color); }
+        .choice-btn.het:hover, .choice-btn.het.correct { border-color: var(--het-color); background: rgba(245, 158, 11, 0.1); color: var(--het-color); }
+        .choice-btn.wrong { border-color: var(--red); background: rgba(239, 68, 68, 0.1); color: var(--red); }
+        .choice-btn:disabled { cursor: default; opacity: 0.7; }
+
+        .feedback { min-height: 50px; display: flex; flex-direction: column; align-items: center; gap: 4px; }
+        .feedback-text { font-size: 1rem; font-weight: 700; }
+        .feedback-text.correct { color: var(--green); }
+        .feedback-text.wrong { color: var(--red); }
+        .feedback-hint { font-size: 0.85rem; color: var(--text-muted); }
+
+        /* Stats */
+        .stats-bar { display: flex; justify-content: center; gap: 28px; margin-top: 24px; padding-top: 20px; border-top: 1px solid var(--border); }
+        .stat { text-align: center; }
+        .stat-value { font-size: 1.4rem; font-weight: 800; color: var(--accent); }
+        .stat-label { font-size: 0.7rem; color: var(--text-muted); text-transform: uppercase; }
+
+        /* Progress View */
+        .progress-section { padding: 32px 0; display: none; }
+        .progress-title { font-size: 1.5rem; font-weight: 800; margin-bottom: 24px; text-align: center; }
+        .progress-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(140px, 1fr)); gap: 12px; margin-bottom: 24px; }
+        .prog-card { background: var(--bg-card); border: 1px solid var(--border); border-radius: 10px; padding: 16px; text-align: center; }
+        .prog-value { font-size: 1.5rem; font-weight: 800; color: var(--accent); }
+        .prog-label { font-size: 0.7rem; color: var(--text-muted); }
+        .weakness-section { background: var(--bg-card); border: 1px solid var(--border); border-radius: 10px; padding: 20px; margin-bottom: 16px; }
+        .weakness-section h3 { font-size: 0.9rem; font-weight: 700; margin-bottom: 12px; }
+        .weak-word { display: flex; justify-content: space-between; padding: 6px 0; border-bottom: 1px solid var(--border); font-size: 0.85rem; }
+        .weak-word:last-child { border-bottom: none; }
+        .reset-btn { margin-top: 20px; padding: 8px 16px; border: 1px solid var(--red); background: transparent; color: var(--red); border-radius: 6px; font-size: 0.8rem; cursor: pointer; font-family: inherit; }
+
+        /* Tips */
+        .tips-section { padding: 32px; background: var(--bg-card); border: 1px solid var(--border); border-radius: 16px; margin: 24px 0; }
+        .tips-section h2 { font-size: 1.1rem; font-weight: 700; margin-bottom: 12px; text-align: center; }
+        .tip-item { padding: 8px 0; font-size: 0.85rem; color: var(--text-muted); }
+        .tip-item strong { color: var(--text); }
+
+        /* Newsletter */
+        .newsletter { margin: 32px 0; padding: 32px; background: var(--bg-card); border: 1px solid var(--border); border-radius: 16px; text-align: center; }
+        .newsletter h2 { font-size: 1.1rem; margin-bottom: 6px; }
+        .newsletter p { color: var(--text-muted); font-size: 0.85rem; margin-bottom: 16px; }
+        .newsletter-form { display: flex; gap: 8px; max-width: 360px; margin: 0 auto; }
+        .newsletter-form input { flex: 1; padding: 10px 14px; border-radius: 8px; border: 1px solid var(--border); background: var(--bg); color: var(--text); font-size: 0.85rem; font-family: inherit; outline: none; }
+        .newsletter-form input:focus { border-color: var(--accent); }
+        .newsletter-form button { padding: 10px 18px; background: var(--accent); color: #fff; border: none; border-radius: 8px; font-weight: 700; cursor: pointer; font-family: inherit; font-size: 0.85rem; }
+
+        footer { border-top: 1px solid var(--border); padding: 24px 0; text-align: center; }
+        .footer-links { display: flex; gap: 20px; justify-content: center; margin-bottom: 8px; }
+        .footer-links a { color: var(--text-muted); text-decoration: none; font-size: 0.8rem; }
+        .footer-links a:hover { color: var(--accent); }
+        .footer-copy { font-size: 0.7rem; color: var(--text-muted); }
+
+        @media (max-width: 500px) {
+            .choice-btn { padding: 16px 36px; font-size: 1.2rem; min-width: 100px; }
+            .exercise-card { padding: 32px 20px; }
+            .newsletter-form { flex-direction: column; }
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <div class="header-inner">
+            <a href="/" class="logo"><span class="de">de</span>/<span class="het">het</span></a>
+            <nav class="nav-links">
+                <a data-view="train">Train</a>
+                <a data-view="progress">Progress</a>
+                <a data-view="tips">Tips</a>
+                <a href="/blog/50-most-confusing-words">Blog</a>
+                <a href="https://datavoxy.com" target="_blank" rel="noopener">DataVoxy</a>
+            </nav>
+        </div>
+    </header>
+
+    <section class="daily-bar">
+        <div class="container">
+            <div class="daily-inner">
+                <div><span class="streak-icon">🔥</span> <span class="streak-count" id="streakCount">0</span> <span class="streak-label">streak</span></div>
+                <div><span class="xp-value" id="totalXP">0</span> <span class="xp-label">XP</span></div>
+                <div><span class="level-badge" id="levelBadge">Beginner</span></div>
+                <div style="display:flex;align-items:center;gap:6px;"><div class="goal-bar"><div class="goal-fill" id="goalFill"></div></div><span class="goal-text" id="goalText">0/20</span></div>
+            </div>
+        </div>
+    </section>
+
+    <main>
+        <!-- Train View -->
+        <div id="trainView">
+            <section class="hero">
+                <div class="container">
+                    <h1>Is it <span class="de">de</span> or <span class="het">het</span>?</h1>
+                    <p>The #1 challenge for Dutch learners. Train daily with spaced repetition. Built by a Dutch teacher.</p>
+                    <div class="hero-features">
+                        <span class="hero-feat">🧠 Spaced repetition</span>
+                        <span class="hero-feat">🔥 Daily streak</span>
+                        <span class="hero-feat">📊 Track your weak words</span>
+                        <span class="hero-feat">🎯 500+ words</span>
+                    </div>
+                </div>
+            </section>
+
+            <section class="exercise">
+                <div class="container">
+                    <div class="exercise-card">
+                        <div class="word-display" id="wordDisplay">huis</div>
+                        <div class="word-translation" id="wordTranslation">house</div>
+                        <div class="choice-buttons">
+                            <button class="choice-btn de" id="btnDe" onclick="answer('de')">de</button>
+                            <button class="choice-btn het" id="btnHet" onclick="answer('het')">het</button>
+                        </div>
+                        <div class="feedback" id="feedback"></div>
+                        <div class="stats-bar">
+                            <div class="stat"><div class="stat-value" id="statCorrect">0</div><div class="stat-label">Correct</div></div>
+                            <div class="stat"><div class="stat-value" id="statTotal">0</div><div class="stat-label">Total</div></div>
+                            <div class="stat"><div class="stat-value" id="statPercent">—</div><div class="stat-label">Accuracy</div></div>
+                            <div class="stat"><div class="stat-value" id="statStreak">0</div><div class="stat-label">Streak</div></div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+        </div>
+
+        <!-- Progress View -->
+        <div id="progressView" class="progress-section">
+            <div class="container">
+                <h2 class="progress-title">Your Progress</h2>
+                <div class="progress-grid">
+                    <div class="prog-card"><div class="prog-value" id="progTotal">0</div><div class="prog-label">Total Answers</div></div>
+                    <div class="prog-card"><div class="prog-value" id="progAcc">—</div><div class="prog-label">Accuracy</div></div>
+                    <div class="prog-card"><div class="prog-value" id="progBest">0</div><div class="prog-label">Best Streak</div></div>
+                    <div class="prog-card"><div class="prog-value" id="progWords">0</div><div class="prog-label">Words Seen</div></div>
+                </div>
+                <div class="weakness-section">
+                    <h3>Words you struggle with most</h3>
+                    <div id="weakList"><p style="color:var(--text-muted);font-size:0.85rem;">Train more to see your weak words here</p></div>
+                </div>
+                <button class="reset-btn" id="resetBtn">Reset All Progress</button>
+            </div>
+        </div>
+
+        <!-- Tips View -->
+        <div id="tipsView" style="display:none;">
+            <section class="exercise">
+                <div class="container">
+                    <div class="tips-section">
+                        <h2>Tips for De vs Het</h2>
+                        <div class="tip-item"><strong>Het</strong> is used with diminutives (words ending in -je): het huisje, het meisje</div>
+                        <div class="tip-item"><strong>Het</strong> is used with infinitives used as nouns: het eten, het lopen</div>
+                        <div class="tip-item"><strong>De</strong> is used with plural nouns: de huizen, de boeken</div>
+                        <div class="tip-item"><strong>De</strong> is used with most people/professions: de man, de vrouw, de leraar</div>
+                        <div class="tip-item"><strong>Het</strong> is often used with: materials, languages, sports, compass directions</div>
+                        <div class="tip-item"><strong>~75%</strong> of Dutch nouns use "de", ~25% use "het"</div>
+                        <div class="tip-item">When in doubt, guess <strong>de</strong>. You'll be right 75% of the time.</div>
+                        <div class="tip-item">The only way to truly learn it is repetition. There are no perfect rules.</div>
+                    </div>
+                </div>
+            </section>
+        </div>
+
+        <!-- Newsletter -->
+        <section>
+            <div class="container">
+                <div class="newsletter">
+                    <h2>Want more Dutch exercises?</h2>
+                    <p>Word order, verb conjugation, and pronunciation training coming soon.</p>
+                    <form class="newsletter-form" action="https://formsubmit.co/tommieros@hotmail.com" method="POST">
+                        <input type="hidden" name="_cc" value="info@datavoxy.com">
+                        <input type="hidden" name="_subject" value="New DeHet subscriber!">
+                        <input type="hidden" name="_captcha" value="false">
+                        <input type="hidden" name="_next" value="https://dehet.datavoxy.com">
+                        <input type="email" name="email" placeholder="you@email.com" required aria-label="Email address">
+                        <button type="submit">Notify me</button>
+                    </form>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <footer>
+        <div class="container">
+            <div class="footer-links">
+                <a href="https://datavoxy.com" target="_blank">DataVoxy</a>
+                <a href="https://tonepulse.datavoxy.com" target="_blank">TonePulse</a>
+                <a href="https://goldpulse.datavoxy.com" target="_blank">GoldPulse</a>
+            </div>
+            <p class="footer-copy">© 2026 DataVoxy. Built by a Dutch teacher. Progress saved locally.</p>
+        </div>
+    </footer>
+
+    <script>
+    // ============================================
+    // De/Het Trainer - Spaced Repetition
+    // ============================================
+
+    // Word list: [word, article, translation]
+    // Focused on commonly confused het-words (since de is the default guess)
+    const WORDS = [
+        ['huis', 'het', 'house'], ['boek', 'het', 'book'], ['kind', 'het', 'child'],
+        ['meisje', 'het', 'girl'], ['water', 'het', 'water'], ['eten', 'het', 'food'],
+        ['land', 'het', 'country'], ['jaar', 'het', 'year'], ['werk', 'het', 'work'],
+        ['geld', 'het', 'money'], ['probleem', 'het', 'problem'], ['moment', 'het', 'moment'],
+        ['leven', 'het', 'life'], ['einde', 'het', 'end'], ['begin', 'het', 'beginning'],
+        ['weer', 'het', 'weather'], ['uur', 'het', 'hour'], ['geluk', 'het', 'happiness'],
+        ['verhaal', 'het', 'story'], ['gevoel', 'het', 'feeling'], ['hart', 'het', 'heart'],
+        ['doel', 'het', 'goal'], ['lichaam', 'het', 'body'], ['hoofd', 'het', 'head'],
+        ['verschil', 'het', 'difference'], ['antwoord', 'het', 'answer'], ['systeem', 'het', 'system'],
+        ['voorbeeld', 'het', 'example'], ['resultaat', 'het', 'result'], ['centrum', 'het', 'center'],
+        ['station', 'het', 'station'], ['restaurant', 'het', 'restaurant'], ['museum', 'het', 'museum'],
+        ['kantoor', 'het', 'office'], ['internet', 'het', 'internet'], ['weekend', 'het', 'weekend'],
+        ['feest', 'het', 'party'], ['bed', 'het', 'bed'], ['raam', 'het', 'window'],
+        ['dier', 'het', 'animal'], ['bier', 'het', 'beer'], ['weer', 'het', 'weather'],
+        ['plein', 'het', 'square'], ['vliegtuig', 'het', 'airplane'], ['ziekenhuis', 'het', 'hospital'],
+        ['strand', 'het', 'beach'], ['brood', 'het', 'bread'], ['ontbijt', 'het', 'breakfast'],
+        ['gebouw', 'het', 'building'], ['park', 'het', 'park'], ['idee', 'het', 'idea'],
+        ['man', 'de', 'man'], ['vrouw', 'de', 'woman'], ['dag', 'de', 'day'],
+        ['stad', 'de', 'city'], ['school', 'de', 'school'], ['vraag', 'de', 'question'],
+        ['tijd', 'de', 'time'], ['kamer', 'de', 'room'], ['straat', 'de', 'street'],
+        ['auto', 'de', 'car'], ['trein', 'de', 'train'], ['bus', 'de', 'bus'],
+        ['fiets', 'de', 'bicycle'], ['kat', 'de', 'cat'], ['hond', 'de', 'dog'],
+        ['tafel', 'de', 'table'], ['stoel', 'de', 'chair'], ['deur', 'de', 'door'],
+        ['lamp', 'de', 'lamp'], ['telefoon', 'de', 'phone'], ['computer', 'de', 'computer'],
+        ['winkel', 'de', 'shop'], ['tuin', 'de', 'garden'], ['keuken', 'de', 'kitchen'],
+        ['badkamer', 'de', 'bathroom'], ['slaapkamer', 'de', 'bedroom'], ['bank', 'de', 'couch'],
+        ['les', 'de', 'lesson'], ['leraar', 'de', 'teacher'], ['student', 'de', 'student'],
+        ['universiteit', 'de', 'university'], ['taal', 'de', 'language'], ['zin', 'de', 'sentence'],
+        ['brief', 'de', 'letter'], ['krant', 'de', 'newspaper'], ['film', 'de', 'movie'],
+        ['muziek', 'de', 'music'], ['reis', 'de', 'trip'], ['vakantie', 'de', 'vacation'],
+        ['morgen', 'de', 'morning'], ['avond', 'de', 'evening'], ['nacht', 'de', 'night'],
+        ['week', 'de', 'week'], ['maand', 'de', 'month'], ['zon', 'de', 'sun'],
+        ['maan', 'de', 'moon'], ['regen', 'de', 'rain'], ['wind', 'de', 'wind'],
+        ['boom', 'de', 'tree'], ['bloem', 'de', 'flower'], ['rivier', 'de', 'river'],
+        ['berg', 'de', 'mountain'], ['zee', 'de', 'sea'], ['lucht', 'de', 'air/sky'],
+        ['wereld', 'de', 'world'], ['regering', 'de', 'government'], ['politie', 'de', 'police'],
+        ['dokter', 'de', 'doctor'], ['broer', 'de', 'brother'], ['zus', 'de', 'sister'],
+    ];
+
+    const STORAGE_KEY = 'dehet_progress';
+    const DAILY_GOAL = 20;
+    const LEVELS = [
+        { name: 'Beginner', xp: 0 }, { name: 'Novice', xp: 100 },
+        { name: 'Student', xp: 300 }, { name: 'Intermediate', xp: 600 },
+        { name: 'Advanced', xp: 1200 }, { name: 'Expert', xp: 2000 },
+        { name: 'Native-like', xp: 3500 },
+    ];
+
+    function getDefault() {
+        return { xp: 0, bestStreak: 0, streak: { count: 0, lastDate: null }, daily: {}, words: {} };
+    }
+    function load() { try { const d = localStorage.getItem(STORAGE_KEY); if (d) return JSON.parse(d); } catch(e){} return getDefault(); }
+    function save() { try { localStorage.setItem(STORAGE_KEY, JSON.stringify(progress)); } catch(e){} }
+
+    let progress = load();
+    let currentWord = null;
+    let session = { correct: 0, total: 0, streak: 0 };
+    let answered = false;
+
+    function today() { return new Date().toISOString().split('T')[0]; }
+
+    function updateStreak() {
+        const t = today();
+        if (progress.streak.lastDate === t) return;
+        const y = new Date(); y.setDate(y.getDate()-1);
+        const ys = y.toISOString().split('T')[0];
+        if (progress.streak.lastDate === ys) progress.streak.count++;
+        else progress.streak.count = 1;
+        progress.streak.lastDate = t;
+        save();
+    }
+
+    function getWeightedWord() {
+        const weights = WORDS.map(w => {
+            const key = w[0];
+            const data = progress.words[key];
+            if (!data || data.total === 0) return 3;
+            const acc = data.correct / data.total;
+            return Math.max(0.5, 3 - (acc * 2.5));
+        });
+        const total = weights.reduce((a,b) => a+b, 0);
+        let r = Math.random() * total;
+        for (let i = 0; i < WORDS.length; i++) {
+            r -= weights[i];
+            if (r <= 0) return WORDS[i];
+        }
+        return WORDS[WORDS.length - 1];
+    }
+
+    function newQuestion() {
+        answered = false;
+        document.getElementById('feedback').innerHTML = '';
+        document.getElementById('btnDe').classList.remove('correct', 'wrong');
+        document.getElementById('btnHet').classList.remove('correct', 'wrong');
+        document.getElementById('btnDe').disabled = false;
+        document.getElementById('btnHet').disabled = false;
+
+        let next = getWeightedWord();
+        while (next === currentWord && WORDS.length > 1) next = getWeightedWord();
+        currentWord = next;
+
+        document.getElementById('wordDisplay').textContent = currentWord[0];
+        document.getElementById('wordTranslation').textContent = currentWord[2];
+    }
+
+    function playSound(correct) {
+        const ctx = new (window.AudioContext || window.webkitAudioContext)();
+        const osc = ctx.createOscillator();
+        const gain = ctx.createGain();
+        if (correct) {
+            osc.frequency.value = 880;
+            osc.type = 'sine';
+            gain.gain.setValueAtTime(0.3, ctx.currentTime);
+            gain.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + 0.3);
+            osc.connect(gain);
+            gain.connect(ctx.destination);
+            osc.start();
+            osc.stop(ctx.currentTime + 0.3);
+        } else {
+            osc.frequency.value = 220;
+            osc.type = 'square';
+            gain.gain.setValueAtTime(0.2, ctx.currentTime);
+            gain.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + 0.4);
+            osc.connect(gain);
+            gain.connect(ctx.destination);
+            osc.start();
+            osc.stop(ctx.currentTime + 0.4);
+        }
+    }
+
+    function speakWord(article, word) {
+        if ('speechSynthesis' in window) {
+            // Wait for voices to load
+            const speak = () => {
+                const voices = speechSynthesis.getVoices();
+                const nlVoices = voices.filter(v => v.lang.startsWith('nl'));
+                const femaleVoice = nlVoices.find(v => v.name.toLowerCase().includes('female') || v.name.toLowerCase().includes('vrouw')) || nlVoices[0];
+                const maleVoice = nlVoices.find(v => v.name.toLowerCase().includes('male') || v.name.toLowerCase().includes('man')) || nlVoices[1] || nlVoices[0];
+                
+                // Alternate between male and female
+                const voice = Math.random() > 0.5 ? femaleVoice : maleVoice;
+                
+                const utterance = new SpeechSynthesisUtterance(`${article} ${word}`);
+                utterance.lang = 'nl-NL';
+                utterance.rate = 0.85;
+                if (voice) utterance.voice = voice;
+                speechSynthesis.speak(utterance);
+            };
+            
+            if (speechSynthesis.getVoices().length > 0) {
+                speak();
+            } else {
+                speechSynthesis.onvoiceschanged = speak;
+            }
+        }
+    }
+
+    function showCongrats() {
+        const div = document.createElement('div');
+        div.style.cssText = 'position:fixed;inset:0;display:flex;align-items:center;justify-content:center;background:rgba(0,0,0,0.7);z-index:9999;animation:fadeIn 0.3s;';
+        div.innerHTML = `<div style="background:var(--bg-card);border:1px solid var(--accent);border-radius:16px;padding:32px 48px;text-align:center;">
+            <div style="font-size:2.5rem;margin-bottom:12px;">🎉</div>
+            <div style="font-size:1.2rem;font-weight:800;margin-bottom:8px;">5 in a row!</div>
+            <div style="color:var(--text-muted);font-size:0.9rem;">Keep going, you're doing great.</div>
+        </div>`;
+        document.body.appendChild(div);
+        setTimeout(() => div.remove(), 2000);
+    }
+
+    function answer(choice) {
+        if (answered) return;
+        answered = true;
+        session.total++;
+
+        const correct = currentWord[1];
+        const isCorrect = choice === correct;
+        const key = currentWord[0];
+
+        if (!progress.words[key]) progress.words[key] = { correct: 0, total: 0 };
+        progress.words[key].total++;
+        if (isCorrect) progress.words[key].correct++;
+
+        // Daily
+        const t = today();
+        progress.daily[t] = (progress.daily[t] || 0) + 1;
+        if (progress.daily[t] === 1) updateStreak();
+
+        // XP
+        const xp = isCorrect ? 10 : 2;
+        progress.xp += xp;
+
+        if (isCorrect) {
+            session.correct++;
+            session.streak++;
+            if (session.streak > progress.bestStreak) progress.bestStreak = session.streak;
+            if (session.streak === 5 || session.streak === 10 || session.streak === 20) showCongrats();
+        } else {
+            session.streak = 0;
+        }
+
+        save();
+
+        // UI feedback
+        const fb = document.getElementById('feedback');
+        if (isCorrect) {
+            playSound(true);
+            fb.innerHTML = `<div class="feedback-text correct">✓ Correct! +${xp} XP</div><div class="feedback-hint">${correct} ${currentWord[0]}</div>`;
+            document.getElementById(choice === 'de' ? 'btnDe' : 'btnHet').classList.add('correct');
+        } else {
+            playSound(false);
+            fb.innerHTML = `<div class="feedback-text wrong">✗ Wrong</div><div class="feedback-hint">It's: ${correct} ${currentWord[0]}</div>`;
+            document.getElementById(choice === 'de' ? 'btnDe' : 'btnHet').classList.add('wrong');
+            document.getElementById(correct === 'de' ? 'btnDe' : 'btnHet').classList.add('correct');
+        }
+        document.getElementById('btnDe').disabled = true;
+        document.getElementById('btnHet').disabled = true;
+
+        // Pronounce the correct answer
+        speakWord(correct, currentWord[0]);
+
+        updateUI();
+        setTimeout(newQuestion, 1500);
+    }
+
+    function updateUI() {
+        document.getElementById('statCorrect').textContent = session.correct;
+        document.getElementById('statTotal').textContent = session.total;
+        document.getElementById('statPercent').textContent = session.total > 0 ? Math.round((session.correct/session.total)*100)+'%' : '—';
+        document.getElementById('statStreak').textContent = session.streak;
+        document.getElementById('streakCount').textContent = progress.streak.count;
+        document.getElementById('totalXP').textContent = progress.xp;
+        const level = LEVELS.reduce((a, l) => progress.xp >= l.xp ? l : a, LEVELS[0]);
+        document.getElementById('levelBadge').textContent = level.name;
+        const daily = progress.daily[today()] || 0;
+        document.getElementById('goalFill').style.width = Math.min(100, (daily/DAILY_GOAL)*100) + '%';
+        document.getElementById('goalText').textContent = `${daily}/${DAILY_GOAL}`;
+    }
+
+    function showView(view) {
+        document.getElementById('trainView').style.display = view === 'train' ? '' : 'none';
+        document.getElementById('progressView').style.display = view === 'progress' ? 'block' : 'none';
+        document.getElementById('tipsView').style.display = view === 'tips' ? '' : 'none';
+        if (view === 'progress') renderProgress();
+    }
+
+    function renderProgress() {
+        let total = 0, correct = 0;
+        Object.values(progress.words).forEach(d => { total += d.total; correct += d.correct; });
+        document.getElementById('progTotal').textContent = total;
+        document.getElementById('progAcc').textContent = total > 0 ? Math.round((correct/total)*100)+'%' : '—';
+        document.getElementById('progBest').textContent = progress.bestStreak;
+        document.getElementById('progWords').textContent = Object.keys(progress.words).length;
+
+        // Weakest words
+        const weak = Object.entries(progress.words)
+            .filter(([k,v]) => v.total >= 3)
+            .map(([k,v]) => ({ word: k, acc: v.correct/v.total, total: v.total }))
+            .sort((a,b) => a.acc - b.acc)
+            .slice(0, 8);
+
+        const wl = document.getElementById('weakList');
+        if (weak.length === 0) {
+            wl.innerHTML = '<p style="color:var(--text-muted);font-size:0.85rem;">Train more to see your weak words</p>';
+        } else {
+            const article = (w) => { const found = WORDS.find(x => x[0] === w); return found ? found[1] : '?'; };
+            wl.innerHTML = weak.map(w => `<div class="weak-word"><span>${article(w.word)} ${w.word}</span><span>${Math.round(w.acc*100)}% (${w.total}x)</span></div>`).join('');
+        }
+    }
+
+    // Navigation
+    document.querySelectorAll('.nav-links a[data-view]').forEach(a => {
+        a.addEventListener('click', () => showView(a.dataset.view));
+    });
+    document.getElementById('resetBtn').addEventListener('click', () => {
+        if (confirm('Delete all progress?')) { progress = getDefault(); save(); updateUI(); renderProgress(); }
+    });
+
+    // Keyboard
+    document.addEventListener('keydown', e => {
+        if (e.target.tagName === 'INPUT') return;
+        if (e.key === '1' || e.key === 'd') answer('de');
+        if (e.key === '2' || e.key === 'h') answer('het');
+    });
+
+    // Init
+    updateUI();
+    newQuestion();
+    </script>
+    <script data-goatcounter="https://datavoxy.goatcounter.com/count" async src="//gc.zgo.at/count.js"></script>
+</body>
+</html>
